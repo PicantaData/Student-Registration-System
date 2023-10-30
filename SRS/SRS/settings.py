@@ -16,6 +16,12 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'srs.it313@gmail.com'
+EMAIL_HOST_PASSWORD = 'rjrk pwxu xxqk ozki'
+EMAIL_PORT = 587
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -56,7 +62,7 @@ ROOT_URLCONF = 'SRS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['/main/templates/'],
+        'DIRS': ['main/templates/main'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -117,9 +123,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = 'main/static/'
 
-STATIC_ROOT = 'static/'
+STATIC_ROOT = 'main/static/'
 
 MEDIA_URL = 'media/'
 
