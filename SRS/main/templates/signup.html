@@ -1,4 +1,4 @@
-{% extends 'landing.html' %}
+{% extends 'navbar.html' %}
 {% block content %}    
         <!-- Login Form -->
         <!-- <h1>Login Page</h1> -->
@@ -18,7 +18,7 @@
               
               <div class="container-lg vh-100" style="padding-top: 56px;">
                 <div class="pb-5">
-                    <h2 class="text-center py-4 py-md-4 mx-3">Sign-in</h2>
+                    <h2 class="text-center py-4 py-md-4 mx-3">Sign-up</h2>
                     <div class="d-flex justify-content-center">
                       <form method="POST" class="form-cont mx-1">
                         {% csrf_token %}
@@ -41,8 +41,14 @@
                               <input type="password" class="form-control" name="password" required>
                             </div>
                           </div>
+                          <div class="row justify-content-center">
+                            <div class="col-md-6 mb-3">
+                              <label class="fw-semibold form-label">Confirm Password</label>
+                              <input type="password" class="form-control" name="confPassword" required>
+                            </div>
+                          </div>
                           <div class="d-none d-md-block text-center">
-                            <button type="submit" class="btn btn-success" style="width: 90px">Submit</button>
+                            <button type="submit" class="btn btn-success" style="width: 90px">Signup</button>
                           </div>
                       </form>
                     </div>
