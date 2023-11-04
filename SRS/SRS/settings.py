@@ -62,7 +62,7 @@ ROOT_URLCONF = 'SRS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [''],
+        'DIRS': ['main/templates/main'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,6 +118,8 @@ TIME_ZONE = 'Asia/Kolkata'
 USE_I18N = True
 
 USE_TZ = True
+
+LOGIN_URL = 'Login'
 
 
 # Static files (CSS, JavaScript, Images)
