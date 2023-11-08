@@ -9,6 +9,9 @@ class Application(models.Model):
     dob = models.DateField(blank=True, null=False)
     address = models.TextField(blank=True)
     app_status = models.CharField(choices=STATUS, default='P', max_length=1)
+    photo = models.ImageField(upload_to='photo/', max_length=250, null=False, default=None)
+    marks_10 = models.FileField(upload_to='10marks/', max_length=250, null=False, default=None)
+    marks_12 = models.FileField(upload_to='12marks/', max_length=250, null=False, default=None)
 
     def __str__(self):
         return self.student.username

@@ -10,6 +10,7 @@ from random import randint
 from SRS import settings
 from .models import Application
 
+
 def send_otp(email):
     subject = 'OTP'
     otp = randint(100000, 999999)
@@ -19,12 +20,21 @@ def send_otp(email):
     send_mail(subject, message, from_email, to_list)
     return otp
 
+
 def Home(request):
+    if request.method == 'POST':
+        subject = request.POST['subject']
+        message = request.POST['message']
+        from_email = request.POST['email']
+        to_list = [settings.EMAIL_HOST_USER]
+        send_mail(subject, message, from_email, to_list)
+        return render(request, 'home.html')
+    
     return render(request, 'home.html')
+
 
 def Login(request):
     if request.method == 'POST':
-        print(request.POST)
         if('signup-email' in request.POST):
             email = request.POST['signup-email']
             password = request.POST['signup-password'] 
@@ -44,7 +54,7 @@ def Login(request):
             User.objects.create_user(username=email, email=email, password=password)
             user = authenticate(username=email, password=password)
             login(request, user)
-            return redirect(reverse('Dashboard', args=(email,)))
+            return redirect(reverse('FillApplication', args=(email,)))
 
         elif('signin-email' in request.POST):
             email = request.POST['signin-email']
@@ -54,25 +64,47 @@ def Login(request):
 
             if user is not None:
                 login(request, user)
+                try:
+                    app = Application.objects.get(student=user)
+                except Application.DoesNotExist:
+                    return redirect(reverse('FillApplication', args=(email,)))
+   
                 return redirect(reverse('Dashboard', args=(email,)))
+            
             else:
                 messages.error(request, 'Bad Credentials!!!')
                 return redirect('main/login.html')
 
     return render(request, 'main/login.html')
 
+
+@login_required
+def FillApplication(request, email):
+    user = User.objects.get(email=email)
+    if request.method == 'POST':
+        name = request.POST['name']
+        dob = request.POST['dob']
+        address = request.POST['address']
+        phone = request.POST['phone']
+        photo = request.POST['photo']
+        marks_10 = request.POST['marks_10']
+        marks_12 = request.POST['marks_12']
+
+        Application.objects.create(name=name, dob=dob, address=address, phone=phone, student=user, photo=photo, marks_10=marks_10, marks_12=marks_12)
+        return redirect(reverse('Dashboard', args=(email,)))
+
+    return render(request, 'fill_application.html', {'email': email})
+
+
 @login_required
 def Dashboard(request, email):
     user = User.objects.get(username=email)
-    try:
-        app = Application.objects.get(student=user)
-    except Application.DoesNotExist:
-        context = {'user': user}
-        return render(request, 'fill_app.html', context)
-    
+    app = Application.objects.get(student=user)
     context = {'user': user, 'application': app}
-    return render(request, 'dashboard.html', context)
+
+    return render(request, 'dashboard.html', context=context)
     
+
 def Logout(request):
     logout(request)
     return redirect('Home')
