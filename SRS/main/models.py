@@ -1,8 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
+import string, secrets
+
+def gen_app_no():
+    characters = string.ascii_letters + string.digits
+    application_number = ''.join(secrets.choice(characters) for _ in range(12))
+    return application_number
 
 class Application(models.Model):
     STATUS = [('P','Pending'), ('A','Accepted'), ('R','Rejected')]
+    app_no = models.CharField(max_length=12, null=False, default=gen_app_no)
     name = models.CharField(max_length=100, null=False)
     student = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=13, blank=False, null=False)

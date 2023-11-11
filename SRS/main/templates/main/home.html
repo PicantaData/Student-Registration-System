@@ -17,15 +17,13 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
+
   <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{% static 'css/style2.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
 
   <!-- =======================================================
@@ -53,7 +51,7 @@
           <li><a class="nav-link scrollto" href="#services">Academics</a></li>
           <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-          <li><a class="nav-link scrollto" href="{% url 'Login' %}">Signin/Signup</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'Login' %}">Login</a></li>
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -83,27 +81,28 @@
           </div>
 
           <div class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5">
-            <h3>Vision</h3>
-            <p> To help build a knowledge-led society founded on intellectual competitiveness for global leadership.</center></p>
+            <div class="icon-box">
+              <h4 class="title">Vision</h4>
+              <p class="description"> To help build a knowledge-led society founded on intellectual competitiveness for global leadership.</p>
+            </div>
 
             <div class="icon-box">
               <!-- <div class="icon"><i class="bx bx-fingerprint"></i></div> -->
-              <h4 class="title"><a href="">Mission</a></h4>
+              <h4 class="title">Mission</h4>
               <p class="description">To become a first choice academic institute having high caliber students, a dynamic faculty, a sensitive administration, functioning within an atmosphere of innovative research, emphasizing academic cooperation and global collaboration. To nurture graduates to be civically engaged individuals who recognize their responsibility and role in their communities and the world.</p>
             </div>
 
             <div class="icon-box">
               <!-- <div class="icon"><i class="bx bx-gift"></i></div> -->
-              <h4 class="title"><a href="">Quality Policy</a></h4>
+              <h4 class="title">Quality Policy</h4>
               <p class="description">To pursue global standards of excellence in all our endeavors, namely, teaching, research, consultancy and continuing education focusing on Information and Communication Technology (ICT) and allied areas. To remain accountable in our core and support function, through processes of self-evaluation and continuous improvement.</p>
             </div>
 
             <div class="icon-box">
               <!-- <div class="icon"><i class="bx bx-atom"></i></div> -->
-              <h4 class="title"><a href="">Accreditation</a></h4>
+              <h4 class="title">Accreditation</h4>
               <p class="description">The National Assessment and Accreditation Council, Government of India has accredited DA-IICT with an ‘A+’ Grade in 2023.</p>
             </div>
-
           </div>
         </div>
       </div>
@@ -338,7 +337,7 @@
           </div>
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form action="{% url 'Home' %}" class="php-email-form" method="post">
+            <form class="php-email-form" method="post">
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6 form-group">
@@ -354,9 +353,9 @@
               <div class="form-group mt-3">
                 <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
               </div>
-              <div class="my-3">
+              <!-- <div class="my-3">
                 <div class="loading">Loading</div>
-              </div>
+              </div> -->
               <div class="text-center"><button type='submit' onclick="MsgFunc()">Send Mail</button></div>
             </form>
           </div>
@@ -446,16 +445,12 @@
 
   <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
   <script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
   <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
   <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
   <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
-  <!-- <script src="{% static 'vendor/php-email-form/validate.js' %}"></script> -->
 
-  <!-- Template Main JS File -->
-  <script src="{% static 'js/main.js' %}"></script>
   <script>
     function MsgFunc(){
       alert('Message Sent')

@@ -32,7 +32,6 @@ def Home(request):
     
     return render(request, 'home.html')
 
-
 def Login(request):
     if request.method == 'POST':
         if('signup-email' in request.POST):
@@ -46,7 +45,7 @@ def Login(request):
 
             otp = send_otp(email)
             context = {'email':email, 'password':password, 'otp':otp}
-            return render(request, 'verify.html', context)
+            return render(request, 'otp.html', context)
         
         elif('verified-email' in request.POST):
             email = request.POST['verified-email']
@@ -54,7 +53,7 @@ def Login(request):
             User.objects.create_user(username=email, email=email, password=password)
             user = authenticate(username=email, password=password)
             login(request, user)
-            return redirect(reverse('FillApplication', args=(email,)))
+            return redirect('FillApplication')
 
         elif('signin-email' in request.POST):
             email = request.POST['signin-email']
@@ -67,38 +66,39 @@ def Login(request):
                 try:
                     app = Application.objects.get(student=user)
                 except Application.DoesNotExist:
-                    return redirect(reverse('FillApplication', args=(email,)))
+                    return redirect('FillApplication')
    
-                return redirect(reverse('Dashboard', args=(email,)))
+                return redirect('Dashboard')
             
             else:
                 messages.error(request, 'Bad Credentials!!!')
-                return redirect('main/login.html')
+                return redirect('Login')
 
     return render(request, 'main/login.html')
 
 
 @login_required
-def FillApplication(request, email):
-    user = User.objects.get(email=email)
+def FillApplication(request):
+    user = request.user
     if request.method == 'POST':
+        print(request.POST)
+        print(request.FILES)
         name = request.POST['name']
         dob = request.POST['dob']
         address = request.POST['address']
         phone = request.POST['phone']
-        photo = request.POST['photo']
-        marks_10 = request.POST['marks_10']
-        marks_12 = request.POST['marks_12']
-
+        photo = request.FILES.get('photo')
+        marks_10 = request.FILES.get('marks_10')
+        marks_12 = request.FILES.get('marks_12')
         Application.objects.create(name=name, dob=dob, address=address, phone=phone, student=user, photo=photo, marks_10=marks_10, marks_12=marks_12)
-        return redirect(reverse('Dashboard', args=(email,)))
+        return redirect('Dashboard')
 
-    return render(request, 'fill_application.html', {'email': email})
+    return render(request, 'fill_application.html')
 
 
 @login_required
-def Dashboard(request, email):
-    user = User.objects.get(username=email)
+def Dashboard(request):
+    user = request.user
     app = Application.objects.get(student=user)
     context = {'user': user, 'application': app}
 

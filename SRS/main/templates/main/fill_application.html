@@ -24,45 +24,50 @@
   <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
 
+  <!-- Bootstrap cdn -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
   <!-- Template Main CSS File -->
-  <link href="{% static 'css/style2.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style_fill_application.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
 </head>
 
 <body>
     <main id="main">
         <!-- ======= Contact Section ======= -->
-        <section id="contact" class="contact">
-          <div class="container">
-
+        <section id="contact" class="contact" style="padding: 5% 15%;">
+          <div id="contact-div" class="containers border border-3 border-dark rounded-3" style="padding: 5% 0%;">
+            <a href="{% url 'Logout' %}">Logout</a>
             <div class="section-title">
               <h2>Application Form</h2>
             </div>
     
-                <form action="{% url 'FillApplication' email %}" class="php-email-form" method="post">
+                <form class="php-email-form" method="post" enctype="multipart/form-data">
                   {% csrf_token %}
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                        <p class="mb-0 mx-3">Name:</p><input type="text" name="name" class="form-control" id="name" placeholder="Enter Name" required>
+                    <div class="d-flex align-items-center form-group my-3 w-75">
+                        <p class="mb-0 form-label">Name:</p>
+                        <input type="text" name="name" class="form-control" id="name" placeholder="Enter Name" required>
+                    </div>  
+                    <div class="d-flex align-items-center form-group my-3 w-75">
+                      <p class="mb-0">Upload Photo:</p>
+                      <input type="file" name="photo" class="form-control" id="photo" required>
                     </div> 
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                      <p class="mb-0 mx-3">Upload Photo:</p><input type="file" name="photo" class="form-control" id="photo" required>
-                  </div> 
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                        <p class="mb-0 mx-3">Phone:</p><input type="number" class="form-control" name="phone" id="phone" placeholder="Enter Phone No." required>
+                    <div class="d-flex align-items-center form-group my-3 w-75">
+                        <p class="mb-0">Phone:</p><input type="number" class="form-control" name="phone" id="phone" placeholder="Enter Phone No." required>
                     </div>
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                        <p class="mb-0 mx-3">Date Of Birth:</p><input type="date" class="form-control" name="dob" id="dob" placeholder="D.O.B" required>
+                    <div class="d-flex align-items-center form-group my-3 w-75">
+                        <p class="mb-0">Date Of Birth:</p><input type="date" class="form-control" name="dob" id="dob" placeholder="D.O.B" required>
                     </div>
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                        <p class="mb-0 mx-3">Address:</p><textarea class="form-control" name="address" rows="5" placeholder="Address" required></textarea>
+                    <div class="d-flex align-items-center form-group my-3 w-75">
+                        <label class="mb-0 me-3">Address:</label>
+                        <textarea class="form-control" name="address" rows="5" placeholder="Address" required></textarea>
                     </div>
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                      <p class="mb-0 mx-3">Upload 10th Marksheet:</p><input type="file" class="form-control" name="marks_10" id="marks_10" required></textarea>
+                    <div class="d-flex align-items-center form-group my-3 w-75">
+                      <p class="mb-0">Upload 10th Marksheet:</p><input type="file" class="form-control" name="marks_10" id="marks_10" required></textarea>
                     </div>
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                      <p class="mb-0 mx-3">Upload 12th Marksheet:</p><input type="file" class="form-control" name="marks_12" id="marks_12" required></textarea>
-                    </div>
-                    <div class="my-3">
-                        <div class="loading">Loading</div>
+                    <div class="d-flex align-items-center form-group my-3 w-75">
+                      <p class="mb-0">Upload 12th Marksheet:</p><input type="file" class="form-control" name="marks_12" id="marks_12" required></textarea>
                     </div>
                     <div><button type='submit' name="submit-btn" id="submit-btn">Submit</button></div>
                 </form>

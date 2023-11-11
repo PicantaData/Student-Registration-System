@@ -7,8 +7,8 @@ urlpatterns = [
     path('', views.Home, name='Home'),
     path('login/', views.Login, name='Login'),
     path('logout/', views.Logout, name='Logout'),
-    path('fill_application/<str:email>/', views.FillApplication, name='FillApplication'),
-    path('dashboard/<str:email>/', views.Dashboard, name='Dashboard'),
+    path('fill_application/', views.FillApplication, name='FillApplication'),
+    path('dashboard/', views.Dashboard, name='Dashboard'),
 ]
 
 if settings.DEBUG:
