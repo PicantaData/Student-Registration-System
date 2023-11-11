@@ -1,0 +1,68 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Responsive Login and Signup Form</title>
+
+    <!-- style CSS -->
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <!-- Boxicons CSS -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+</head>
+<body>
+    <section class="container forms">
+        <div class="form login">
+            <div class="form-content">
+                <header>Enter OTP</header>
+                <form>
+                    <div class="field input-field">
+                        <input type="number" placeholder="OTP" class="password" id="otp">
+                        <i class='bx bx-hide eye-icon'></i>
+                    </div>
+                    <div class="field button-field">
+                        <button type="submit" id="otp-button">Verify OTP</button>
+                    </div>
+                </form>
+            </div>
+        </div>        
+    </section>
+
+    <!-- JavaScript -->
+    <script src="{% static 'js/login.js' %}"></script>
+    <script>
+        $('#otp-button').click(function(e){
+            e.preventDefault();
+            let otp = $('#otp').val();
+            if(otp == '{{otp}}'){
+                console.log("OTP Matched!")
+                
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'Login' %}",
+                    data: {
+                        'verified-email': '{{email}}',
+                        'password': '{{password}}',
+                        csrfmiddlewaretoken: '{{csrf_token}}'
+                    } 
+                })
+                .done(function(){
+                    alert("Your email has been verified!")
+                    window.location.href = "{% url 'FillApplication' %}"
+                })
+                .fail(function(){
+                    alert("Email was not verified, please try again!")
+                })
+            }
+            else{
+                alert("Incorrect OTP, please retry.")
+            }
+        })
+    </script>
+</body>     
+</html>

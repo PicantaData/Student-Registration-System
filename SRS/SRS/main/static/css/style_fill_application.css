@@ -1,0 +1,14 @@
+#main{
+    background-color: rgb(13, 130, 176) !important;
+}
+
+#contact-div{
+    background-color: white;
+    font-family: 'Open Sans', sans-serif;
+}
+
+@media (max-width: 900px) {
+    form {
+      padding: 0 1.5rem;
+    }
+}
