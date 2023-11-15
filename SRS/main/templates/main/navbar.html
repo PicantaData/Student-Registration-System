@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Student Registration System</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'images/srs.jpg' %}" rel="icon">
+  <link href="{% static 'images/srs.jpg' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i" rel="stylesheet">
+
+
+  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<header id="header" class="fixed-top">
+  <div class="container d-flex align-items-center justify-content-between">
+
+    <a href="{% url 'Home' %}" class="logo"><img src="{% static 'images/dalogo.png' %}" alt="" class="images-fluid"></a>
+    <!-- Uncomment below if you prefer to use text as a logo -->
+    <!-- <h1 class="logo"><a href="index.html">Butterfly</a></h1> -->
+
+    <nav id="navbar" class="navbar">
+      <ul>
+        <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+        <li><a class="nav-link scrollto" href="#about">About Us</a></li>
+        <li><a class="nav-link scrollto" href="#services">Academics</a></li>
+        <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
+        <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+        {% if not request.user.is_authenticated %}
+          <li><a class="nav-link scrollto" href="{% url 'Login' %}">Login</a></li>
+        {% else %}
+          <li><a class="nav-link scrollto" href="{% url 'Logout' %}">Logout</a></li>
+        {% endif %}
+      </ul>
+      <i class="bi bi-list mobile-nav-toggle"></i>
+    </nav><!-- .navbar -->
+
+  </div>
+</header><!-- End Header -->

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 import string, secrets
+from django.core.exceptions import ValidationError
+from django.contrib import messages
 
 def gen_app_no():
     characters = string.ascii_letters + string.digits
@@ -26,6 +28,28 @@ class Application(models.Model):
     class Meta:
         ordering = ['app_status']
 
+    
+class Notification(models.Model):
+    STATUS = [('E', 'Every-Site-Visitor'),
+              ('Q','All-Applicants'),
+              ('P','Pending'), 
+              ('A','Accepted'),
+              ('R','Rejected'),
+              ('S', 'Specific-Applicant')]
+    filter_flag = models.CharField(choices=STATUS, default='S', max_length=1)
+    recipient = models.ForeignKey(Application,default=None,null=True, blank=True, on_delete=models.CASCADE)
+    content = models.CharField(max_length=100)
+
+    # def save(self, *args, **kwargs):
+        # if self.filter_flag == 'S' and self.recipient is None:
+        #     # raise ValidationError('Specific Person needs to be selected!')
+        #     messages.error(self.request, "Error Message")
+        #     pass
+        # else:
+        #     super(Notification,self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.filter_flag + ': ' + self.content
 
 class Question(models.Model):
     qid = models.UUIDField(primary_key=True)
@@ -36,4 +60,3 @@ class Question(models.Model):
     op4 = models.TextField(null=False)
     OPTIONS = [('1','op1'), ('2','op2'), ('3', 'op3'), ('4','op4')]
     ans = models.TextField(choices=OPTIONS, null=False)
-    

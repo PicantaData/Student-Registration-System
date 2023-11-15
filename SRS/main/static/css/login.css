@@ -116,7 +116,7 @@ form{
 }
 
 .form a{
-    color: #ffffff;
+    color: #111;
     text-decoration: none;
 }
 .form b{
@@ -135,6 +135,30 @@ form{
     justify-content: center;
 }
 
+
+.alert {
+    display: flexbox;
+    flex-direction: column;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid;
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.alert-success {
+    border-color: #c3e6cb;
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-error {
+    border-color: #f8d7da;
+    background-color: #f5c6cb;
+    color: #721c24;
+}
 
 
 @media screen and (max-width: 400px) {

@@ -24,15 +24,6 @@
   <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
   <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
   <link href="{% static 'css/style.css' %}" rel="stylesheet">
-
-
-  <!-- =======================================================
-  * Template Name: Butterfly
-  * Updated: Sep 18 2023 with Bootstrap v5.3.2
-  * Template URL: https://bootstrapmade.com/butterfly-free-bootstrap-theme/
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
 
 <body>
@@ -51,7 +42,11 @@
           <li><a class="nav-link scrollto" href="#services">Academics</a></li>
           <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
-          <li><a class="nav-link scrollto" href="{% url 'Login' %}">Login</a></li>
+          {% if not request.user.is_authenticated %}
+            <li><a class="nav-link scrollto" href="{% url 'Login' %}">Login</a></li>
+          {% else %}
+            <li><a class="nav-link scrollto" href="{% url 'Logout' %}">Logout</a></li>
+          {% endif %}
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
@@ -101,7 +96,7 @@
             <div class="icon-box">
               <!-- <div class="icon"><i class="bx bx-atom"></i></div> -->
               <h4 class="title">Accreditation</h4>
-              <p class="description">The National Assessment and Accreditation Council, Government of India has accredited DA-IICT with an ‘A+’ Grade in 2023.</p>
+              <p class="description">The National Assessment and Accreditation Council, Government of India has accredited DA-IICT with an 'A+' Grade in 2023.</p>
             </div>
           </div>
         </div>
@@ -306,7 +301,8 @@
         </div>
 
         <div>
-          <div class="mapouter"><div class="gmap_canvas"><iframe width="1300" height="250" id="gmap_canvas" src="https://maps.google.com/maps?q=daiict&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://online.stopwatch-timer.net/">timer stopwatch</a><br><a href="https://www.tabclocktab.com/"></a><br><style>.mapouter{position: relative;text-align: right;height: 250px;width: 1300px;}</style><a href="https://www.ongooglemaps.com">google maps embed</a><style>.gmap_canvas{overflow: hidden;background: none !important;height: 250px;width: 1300px;}</style></div></div>
+          <div class="mapouter"><div class="gmap_canvas"><iframe width="800" height="250" id="gmap_canvas"
+            src="https://maps.google.com/maps?q=daiict&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="10"></iframe><a href="https://online.stopwatch-timer.net/">timer stopwatch</a><br><a href="https://www.tabclocktab.com/"></a><br><style>.mapouter{position: relative;text-align: right;height: 250px;width: 800px;}</style><a href="https://www.ongooglemaps.com">google maps embed</a><style>.gmap_canvas{overflow: hidden;background: none !important;height: 250px;width: 800px;}</style></div></div>
         </div>
 
         <div class="row mt-5">
@@ -364,40 +360,24 @@
     </section><!-- End Contact Section -->
 
   </main><!-- End #main -->
-
   <!-- ======= Footer ======= -->
   <footer id="footer">
-
-    <!-- <div class="footer-newsletter">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-lg-6">
-            <h4>Join Our Newsletter</h4>
-            <p>Tamen quem nulla quae legam multos aute sint culpa legam noster magna</p>
-            <form action="" method="post">
-              <input type="email" name="email"><input type="submit" value="Subscribe">
-            </form>
-          </div>
-        </div>
-      </div>
-    </div> -->
-
     <div class="footer-top">
       <div class="container">
         <div class="row">
 
-          <!-- <div class="col-lg-3 col-md-6 footer-contact">
-            <h3>Butterfly</h3>
+          <div class="col-lg-3 col-md-6 footer-contact">
+            <h3>DA-IICT</h3>
             <p>
-              A108 Adam Street <br>
-              New York, NY 535022<br>
-              United States <br><br>
-              <strong>Phone:</strong> +1 5589 55488 55<br>
-              <strong>Email:</strong> info@example.com<br>
+              Near Reliance Chowk <br>
+              Gandhinagar, 382007<br>
+              <br><br>
+              <strong>Phone:</strong> (+91) 079 - 6826 1700<br>
+              <strong>Email:</strong> info@daiict.ac.in<br>
             </p>
-          </div> -->
+          </div> 
 
-          <!-- <div class="col-lg-3 col-md-6 footer-links">
+          <div class="col-lg-3 col-md-6 footer-links">
             <h4>Useful Links</h4>
             <ul>
               <li><i class="bx bx-chevron-right"></i> <a href="#">Home</a></li>
@@ -417,7 +397,7 @@
               <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
             </ul>
-          </div> -->
+          </div>
 
           <div class="col-lg-3 col-md-6 footer-links">
            <h4>Our Social Networks</h4>
@@ -450,6 +430,7 @@
   <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
   <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
   <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
 
   <script>
     function MsgFunc(){

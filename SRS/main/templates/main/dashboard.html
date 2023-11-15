@@ -13,6 +13,9 @@
         <li>{{application.dob}}</li>
         <li>{{application.address}}</li>
         <li>{{application.app_status}}</li>
+        {% for notification in notifications %}
+            <li>{{notification.content}}</li>
+        {% endfor %}
     </ul>
     <h1><a href="{% url 'Logout' %}">Logout</a></h1>
 </body>

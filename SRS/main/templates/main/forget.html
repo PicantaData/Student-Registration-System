@@ -1,12 +1,10 @@
 {%load static%}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <title>Forget Password</title>
 
     <!-- style CSS -->
@@ -14,8 +12,8 @@
 
     <!-- Boxicons CSS -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-</head>
 
+</head>
 <body>
     {% if messages %}
         {% for message in messages %}
@@ -27,22 +25,21 @@
     <section class="container forms">
         <div class="form login">
             <div class="form-content">
-                <header>Enter OTP</header>
-                <form action="" method="post">
+                <header>Password Reset</header>
+                <form method="post">
                     {% csrf_token %}
                     <div class="field input-field">
-                        <input type="number" placeholder="OTP" class="password" id="otp" name="otp" required>
-                        <i class='bx bx-hide eye-icon'></i>
+                        <input type="email" placeholder="Email" class="input" id="forget-email" name="forget-email" required>
                     </div>
                     <div class="field button-field">
-                        <button type="submit" id="otp-button">Verify OTP</button>
+                        <button type="submit">Send OTP</button>
                     </div>
                 </form>
             </div>
         </div>
     </section>
-    <!-- JavaScript -->
-    <script src="{% static 'js/login.js' %}"></script>
-</body>
 
+    <!-- JavaScript -->
+    {% comment %} <script src="{% static 'js/login.js' %}"></script> {% endcomment %}
+</body>
 </html>
