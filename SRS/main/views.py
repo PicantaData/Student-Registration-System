@@ -55,8 +55,8 @@ def Register(request):
                 messages.error(request, str(e))
                 return render(request, 'register.html')
 
-            # otp = send_otp(email)
-            otp = 0
+            otp = send_otp(email)
+            # otp = 0
             request.session['otp'] = otp
             request.session['email'] = email
             request.session['password'] = password
@@ -179,3 +179,8 @@ def Dashboard(request):
 def Logout(request):
     logout(request)
     return redirect('Home')
+
+
+def Test(request):
+    pass
+    

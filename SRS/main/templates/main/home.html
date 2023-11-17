@@ -45,6 +45,7 @@
           {% if not request.user.is_authenticated %}
             <li><a class="nav-link scrollto" href="{% url 'Login' %}">Login</a></li>
           {% else %}
+            <li><a class="nav-link scrollto" href="{% url 'Dashboard' %}">Dashboard</a></li>
             <li><a class="nav-link scrollto" href="{% url 'Logout' %}">Logout</a></li>
           {% endif %}
         </ul>
@@ -57,7 +58,7 @@
   <!-- ======= Hero Section ======= -->
   <section id="hero" class="d-flex align-items pb-0">
         <div class="col-lg-12 order-1 order-lg-2 hero-images al ">
-          <img src="{% static 'images/DAIICT_NAAC_Grade_award_2023.png' %}" width="100%" height="100%" class="images-fluid" alt="">
+          <a class="nav-link scrollto" href="#about"> <img src="{% static 'images/DAIICT_NAAC_Grade_award_2023.png' %}" width="100%" height="100%" class="images-fluid" alt=""></a>
         </div>
       </div>
     </div>
@@ -303,10 +304,10 @@
         <div>
           <div class="mapouter">
             <div class="gmap_canvas">
-              <iframe width="800" height="250" id="gmap_canvas" src="https://maps.google.com/maps?q=daiict&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="10"></iframe>
-              <a href="https://online.stopwatch-timer.net/">timer stopwatch</a><br><a href="https://www.tabclocktab.com/"></a><br>
-              <style>.mapouter{position: relative;text-align: right;height: 250px;width: 800px;}</style><a href="https://www.ongooglemaps.com">google maps embed</a>
-              <style>.gmap_canvas{overflow: hidden;background: none !important;height: 250px;width: 800px;}</style>
+              <iframe width="1000" height="250" id="gmap_canvas" src="https://maps.google.com/maps?q=daiict&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+              <!-- <a href="https://online.stopwatch-timer.net/">timer stopwatch</a><br><a href="https://www.tabclocktab.com/"></a><br> -->
+              <style>.mapouter{position: relative;text-align: center;height: 250px;width: 100%;}</style><a href="https://www.embedgooglemap.net"></a>
+              <style>.gmap_canvas{overflow: hidden;background: none !important;height: 250px;width: 100%;}</style>
             </div>
           </div>
         </div>
@@ -372,7 +373,7 @@
       <div class="container">
         <div class="row">
 
-          <div class="col-lg-3 col-md-6 footer-contact">
+          <!-- <div class="col-lg-3 col-md-6 footer-contact">
             <h3>DA-IICT</h3>
             <p>
               Near Reliance Chowk <br>
@@ -403,28 +404,25 @@
               <li><i class="bx bx-chevron-right"></i> <a href="#">Marketing</a></li>
               <li><i class="bx bx-chevron-right"></i> <a href="#">Graphic Design</a></li>
             </ul>
-          </div>
+          </div> -->
 
-          <div class="col-lg-3 col-md-6 footer-links">
-           <h4>Our Social Networks</h4>
-            <!-- <p>Cras fermentum odio eu feugiat lide par naso tierra videa magna derita valies</p> -->
-            <div class="social-links mt-3">
-              <a href="https://twitter.com/daiictofficial?lang=en" class="twitter"><i class="bx bxl-twitter"></i></a>
-              <a href="https://www.facebook.com/DAIICT/" class="facebook"><i class="bx bxl-facebook"></i></a>
-              <a href="https://www.instagram.com/daiictofficial/" class="instagram"><i class="bx bxl-instagram"></i></a>
-              <!-- <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a> -->
-              <a href="https://in.linkedin.com/school/dhirubhai-ambani-institute-of-information-and-communication-technology/" class="linkedin"><i class="bx bxl-linkedin"></i></a>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-
-    <div class="container py-4">
-      <div class="copyright">
-        &copy; Copyright <strong><span>DAIICT</span></strong>. All Rights Reserved
-      </div>
-      <div class="credits">
+    
+    <div class="container vh-3">
+      <div class="row">
+        <div class="copyright col-lg-5 py-3">
+          &copy; Copyright <strong><span>DAIICT</span></strong>. All Rights Reserved
+        </div>
+        <div class="col-lg-4 col-md-6 right footer-links">
+          <div class="social-links mt-3">
+            <a href="https://twitter.com/daiictofficial?lang=en" class="twitter"><i class="bx bxl-twitter"></i></a>
+            <a href="https://www.facebook.com/DAIICT/" class="facebook"><i class="bx bxl-facebook"></i></a>
+            <a href="https://www.instagram.com/daiictofficial/" class="instagram"><i class="bx bxl-instagram"></i></a>
+            <a href="https://in.linkedin.com/school/dhirubhai-ambani-institute-of-information-and-communication-technology/" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+          </div>
+        </div>
       </div>
     </div>
   </footer><!-- End Footer -->

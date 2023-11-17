@@ -21,6 +21,7 @@ class Application(models.Model):
     photo = models.ImageField(upload_to='photo/', max_length=250, null=False, default=None)
     marks_10 = models.FileField(upload_to='10marks/', max_length=250, null=False, default=None)
     marks_12 = models.FileField(upload_to='12marks/', max_length=250, null=False, default=None)
+    # result = models.JSONField(null=True)
 
     def __str__(self):
         return self.student.username
@@ -60,3 +61,14 @@ class Question(models.Model):
     op4 = models.TextField(null=False)
     OPTIONS = [('1','op1'), ('2','op2'), ('3', 'op3'), ('4','op4')]
     ans = models.TextField(choices=OPTIONS, null=False)
+
+class ApplicantResponse(models.Model):
+    OPTIONS = [('1','op1'), ('2','op2'), ('3', 'op3'), ('4','op4')]
+    app_no = models.ForeignKey(Application, on_delete=models.CASCADE)
+    ques = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
+    response = models.CharField(choices=OPTIONS, null=True, max_length=1)
+    class Meta:
+        unique_together = ['app_no', 'ques']
+
+    def __str__(self):
+        return str(self.app_no) + ' ' + str(self.ques)

@@ -49,7 +49,7 @@
 
             <!-- Home -->
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'Dashboard' %}">
+                <a class="nav-link" href="{% url 'Home' %}">
                     <span>Home</span></a>
             </li>
             <!--Hallticket-->
@@ -87,6 +87,11 @@
                   <span>Change Password</span></a>
             </li>
 
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'Logout' %}">
+                <span>Logout</span></a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -101,26 +106,10 @@
         <div id="content-wrapper" class="d-flex flex-column">
           <!-- Main Content -->
           <div id="content">
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-                <!-- Sidebar Toggle (Topbar) -->
-                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                    <i class="fa fa-bars"></i>
-                </button>
-                <!-- Topbar Navbar -->
-                <ul  class="navbar-nav ml-auto">
-                    <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-                    <div class="mb-3 mr-3">
-                        <a href="{% url 'Logout' %}"><button class="top btn btn-primary">Logout</button></a>
-                    </div>
-                </ul>
-            </nav>
-            <!-- End of Topbar -->
-
             <div class="container-fluid">
                 <!-- Page Heading -->
                 <div class=" text-center align-items-center justify-content-between mb-4">
-                    <h1 class="h3 mb-0 text-gray-800">Student Dashboard</h1>
+                    <h1 class="h3 mt-3 mb-0 text-gray-800">Student Dashboard</h1>
                 </div>
                 <!-- Content Row -->
                 <div class="row">
@@ -189,28 +178,20 @@
                           <div class="col-sm-3">
                             <h6 class="mb-0">Status</h6>
                           </div>
-                          <div class="col-sm-9 text-secondary">{{application.app_status}}</div>
+                          <div class="col-sm-9 text-secondary">{{application.get_app_status_display}}</div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </main><!-- End #main -->
-
-                      
-                      <a href="#" class="back-to-top  align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-                <!-- Begin Page Content -->
-                
-
-            </div>
-            <!-- End of Main Content -->
-
+            </main><!-- End #main -->                      
+            <a href="#" class="back-to-top  align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
             <!-- Footer -->
             <footer class="sticky-footer" style="background-color: hsl(216, 25%, 90%);">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2023</span>
+                        <span>Copyright &copy; DA-IICT</span>
                     </div>
                 </div>
             </footer>
