@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login, logout
@@ -7,7 +8,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from random import randint
 from SRS import settings
-from .models import Application, Notification
+from .models import Application, Notification, Question, ApplicantResponse
 from .validator import MinimumLengthValidator, NumberValidator, UppercaseValidator
 
 
@@ -56,7 +57,6 @@ def Register(request):
                 return render(request, 'register.html')
 
             otp = send_otp(email)
-            # otp = 0
             request.session['otp'] = otp
             request.session['email'] = email
             request.session['password'] = password
@@ -168,9 +168,12 @@ def FillApplication(request):
 @login_required
 def Dashboard(request):
     user = request.user
-    app = Application.objects.get(student=user)
-    notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)
+    try:
+        app = Application.objects.get(student=user)
+    except Application.DoesNotExist:
+        return redirect('FillApplication')
     
+    notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)    
     context = {'user' : user, 'application' : app, 'notifications' : notification}
 
     return render(request, 'dashboard.html', context=context)
@@ -181,6 +184,44 @@ def Logout(request):
     return redirect('Home')
 
 
-def Test(request):
-    pass
+@login_required
+def startTest(request):
+    user = request.user
+    question = Question.objects.all()[0]
+
+    if request.method == 'GET':
+        applicant = ApplicantResponse.objects.filter(app_no__user = user).exists()
+
+        if not applicant: #No such object is found / DoesNotExist  ( Empty queryset )
+            currApplicant = ApplicantResponse(app_no__user = user, ques__qid = question.qid)
+            currApplicant.save()
+        else:
+            currApplicant = ApplicantResponse.objects.get(app_no__user = user)
+            #Test if end test time stamp is present, also continue test if already started
+    
+    return render(request, 'questions.html', {'question':question})
+
+@login_required
+def nextQuestion(request, question_id):
+    user = request.user
+    question = Question.objects.get(qid = question_id)
+    user_response = ApplicantResponse.objects.filter(app_no__user = user, ques__qid = question_id)
+
+    if request.method =='POST':
+        user_curr_ans = request.POST.get('answer')
+
+        if user_response is not None:
+            user_response.response = user_curr_ans
+        else:
+            user_response = ApplicantResponse.objects.create(app_no__user = user, ques__qid = question_id, response = user_curr_ans)
+        
+        user_response.save()
+
+        if question_id < len(Question.objects.all()):
+            next_question_id = Question.objects.filter(qid__gt=question_id).first().qid
+            next_question = Question.objects.get(qid=next_question_id)
+            #you may write logic for last question to change next button to submit button
+            return render(request, 'question.html', {'question': next_question})
+        
+    return render(request, 'questions.html', {'question':question, 'response':user_response.response})
     

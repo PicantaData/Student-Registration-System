@@ -21,7 +21,7 @@ class Application(models.Model):
     photo = models.ImageField(upload_to='photo/', max_length=250, null=False, default=None)
     marks_10 = models.FileField(upload_to='10marks/', max_length=250, null=False, default=None)
     marks_12 = models.FileField(upload_to='12marks/', max_length=250, null=False, default=None)
-    # result = models.JSONField(null=True)
+    result = models.JSONField(null=True)
 
     def __str__(self):
         return self.student.username
@@ -53,7 +53,7 @@ class Notification(models.Model):
         return self.filter_flag + ': ' + self.content
 
 class Question(models.Model):
-    qid = models.UUIDField(primary_key=True)
+    qid = models.IntegerField(unique=True, primary_key=True)
     ques = models.TextField(null=False)
     op1 = models.TextField(null=False)
     op2 = models.TextField(null=False)
@@ -72,3 +72,6 @@ class ApplicantResponse(models.Model):
 
     def __str__(self):
         return str(self.app_no) + ' ' + str(self.ques)
+    
+# class Test(models.Model):
+#     student = models.OneToOneField(Application, on_delete=models.CASCADE)

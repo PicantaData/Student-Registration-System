@@ -8,9 +8,11 @@ urlpatterns = [
     path('login/', views.Login, name='Login'),
     path('register/', views.Register, name='Register'),
     path('logout/', views.Logout, name='Logout'),
+    path('forget/', views.Forget, name='Forget'),
     path('fill_application/', views.FillApplication, name='FillApplication'),
     path('dashboard/', views.Dashboard, name='Dashboard'),
-    path('forget/', views.Forget, name='Forget')
+    path('test/start', views.startTest, name='StartTest'),
+    path('test/<int:qid>', views.nextQuestion, name='Next_Question'),
 ]
 
 if settings.DEBUG:
