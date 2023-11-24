@@ -1,85 +1,612 @@
-{% load static %}
+{%load static%}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta content="width=device-width, initial-scale=1.0" name="viewport">
-
-  <title>Student Registration System</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
-
-  <!-- Favicons -->
-  <link href="{% static 'images/srs.jpg' %}" rel="icon">
-  <link href="{% static 'images/srs.jpg' %}" rel="apple-touch-icon">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i" rel="stylesheet">
-
-  <!-- Vendor CSS Files -->
-  <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-  <link href="{% static 'vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
-
-  <!-- Template Main CSS File -->
-  <link href="{% static 'css/style2.css' %}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Form</title>
+    <link rel="stylesheet" href="{% static 'css/style_fill_application.css' %}">
 </head>
-
 <body>
-    <main id="main">
-        <!-- ======= Contact Section ======= -->
-        <section id="contact" class="contact">
-          <div class="container">
+    <div class="container">
+        <div class="forms-container">
+            <div class="div-application-form-personal">
+                <div class="header-text httal htvam">
+                    <h1 class="form-header" data-component="header">Application Form</h1>
+                    <div class="form-subHeader">
+                        <p>This is a one-time process. Please enter details carefully</p>
+                        <h2 class="form-header" data-component="header" >Personal Details</h2>
+                    </div>
+                </div>
+                <hr>
+                <!---Application Form (Personal Details)-->
 
-            <div class="section-title">
-              <h2>Application Form</h2>
-            </div>
-    
-                <form action="{% url 'FillApplication' email %}" class="php-email-form" method="post">
-                  {% csrf_token %}
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                        <p class="mb-0 mx-3">Name:</p><input type="text" name="name" class="form-control" id="name" placeholder="Enter Name" required>
-                    </div> 
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                      <p class="mb-0 mx-3">Upload Photo:</p><input type="file" name="photo" class="form-control" id="photo" required>
-                  </div> 
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                        <p class="mb-0 mx-3">Phone:</p><input type="number" class="form-control" name="phone" id="phone" placeholder="Enter Phone No." required>
+                <form action="{% url 'FillApplication' %}" class="application-form-personal">
+                    <h3 id="name">Name</h3>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                First Name
+                            </label>
+                            <input type="text" class="required-field-personal" id="first-name" placeholder="Enter First Name" />
+                        </span>
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                Middle Name
+                            </label>
+                            <input type="text" id="middle-name" placeholder="Enter Middle Name"/>
+                        </span>
+                        
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                Last Name
+                            </label>
+                            <input type="text" class="required-field-personal" id="last-name" placeholder="Enter Last Name"/>
+                        </span>
                     </div>
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                        <p class="mb-0 mx-3">Date Of Birth:</p><input type="date" class="form-control" name="dob" id="dob" placeholder="D.O.B" required>
+                    <br>
+                    <h3 id="gender">Gender</h3>
+                    <div data-wrapper-react="true" class="gender">
+                        <span class="span-gender" style="vertical-align:top">
+                            <input type="radio" name="gender" id="male" value="false" /> Male
+                            <input type="radio" name="gender" id="female" value="false" /> Female
+                            <input type="radio" name="gender" id="prefer-not-say" value="false" /> Prefer Not To Say
+                        </span>
+                    
+                        <script>
+                            // Get all radio buttons with the name "gender"
+                            var radioButtons = document.querySelectorAll('input[name="gender"]');
+                    
+                            // Add an event listener to each radio button
+                            radioButtons.forEach(function(radioButton) {
+                                radioButton.addEventListener('change', function() {
+                                    // Set the value to "true" when a radio button is selected
+                                    radioButtons.forEach(function(rb) {
+                                        rb.value = "false";
+                                    });
+                                    this.value = "true";
+                                });
+                            });
+                        </script>
                     </div>
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                        <p class="mb-0 mx-3">Address:</p><textarea class="form-control" name="address" rows="5" placeholder="Address" required></textarea>
+                    <br>
+                    <h3 id="birthdate">Birth Date</h3>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                Birthdate
+                            </label>
+                            <input type="date" class="required-field" id="birthdate"/>
+                        </span>
+                        <!---<span class="form-field">
+                            <label>
+                                Day
+                            </label>
+                            <select class="form-dropdown" class="required-field-personal" data-component="birthdate-day" id="day">
+                                <option></option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                                <option value="11">11</option>
+                                <option value="12">12</option>
+                                <option value="13">13</option>
+                                <option value="14">14</option>
+                                <option value="15">15</option>
+                                <option value="16">16</option>
+                                <option value="17">17</option>
+                                <option value="18">18</option>
+                                <option value="19">19</option>
+                                <option value="20">20</option>
+                                <option value="21">21</option>
+                                <option value="22">22</option>
+                                <option value="23">23</option>
+                                <option value="24">24</option>
+                                <option value="25">25</option>
+                                <option value="26">26</option>
+                                <option value="27">27</option>
+                                <option value="28">28</option>
+                                <option value="29">29</option>
+                                <option value="30">30</option>
+                                <option value="31">31</option>
+                            </select>
+                        </span>
+                        <span class="form-field">
+                            <label>
+                                Month
+                            </label>
+                            <select class="form-dropdown" class="required-field-personal" data-component="birthdate-month" id="month">
+                                <option></option>
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </span>
+                        <span class="form-field">
+                            <label>
+                                Year
+                            </label>
+                            <select class="form-dropdown" class="required-field-personal" data-component="birthdate-year" id="year">
+                                <option></option>
+                                <option value="2023">2023</option>
+                                <option value="2023">2022</option>
+                                <option value="2023">2021</option>
+                                <option value="2023">2020</option>
+                                <option value="2023">2019</option>
+                                <option value="2023">2018</option>
+                                <option value="2023">2017</option>
+                                <option value="2023">2016</option>
+                                <option value="2023">2015</option>
+                                <option value="2023">2014</option>
+                                <option value="2023">2013</option>
+                                <option value="2023">2012</option>
+                                <option value="2023">2011</option>
+                                <option value="2023">2010</option>
+                                <option value="2023">2009</option>
+                            </select>
+                        </span>--->
                     </div>
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                      <p class="mb-0 mx-3">Upload 10th Marksheet:</p><input type="file" class="form-control" name="marks_10" id="marks_10" required></textarea>
+                    <br>
+                    <div data-wrapper-react="true" class="phone-numbers">
+                        <h3 id="contact-details">Contact Details</h3>
+                        
+                        <div data-wrapper-react="true" class="form-pair">
+                            <span class="form-field" >
+                                <label aria-hidden="false">
+                                    Phone number
+                                </label>
+                                <input type="text" class="required-field-personal" id="Phone number" placeholder="Enter Phone Number" />
+                            </span>
+
+                            <span class="form-field">
+                                <label aria-hidden="false">
+                                    Alternate phone number
+                                </label>
+                                <input type="text" id="Alternate phone number" placeholder="Enter Alternate Phone number"/>
+                            </span>
+                        </div>
+                        
                     </div>
-                    <div class="col-md-6 d-flex align-items-center form-group">
-                      <p class="mb-0 mx-3">Upload 12th Marksheet:</p><input type="file" class="form-control" name="marks_12" id="marks_12" required></textarea>
+                    <br>
+                    <h3 id="nationaity-proof">Nationality Proof </h3>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align: top">
+                            <label>
+                                Aadhar Card
+                            </label>
+                            <input type="file" class="required-field-personal" id="Aadhar-card" placeholder=""/>
+                        </span>
+                        <span class="form-field" style="vertical-align: top">
+                            <label>
+                                Aadhar Card Number
+                            </label>
+                            <input type="number" class="required-field-personal" id="nationality-card-number" placeholder="Enter Aadhar Card Number" />
+                        </span>
                     </div>
-                    <div class="my-3">
-                        <div class="loading">Loading</div>
+                    <br>
+                    <h3 id="parents-details">Family Details </h3> 
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align: top">
+                            <label>
+                                Father's Name
+                            </label>
+                            <input type="text" class="required-field-personal" id="father-name" placeholder="Enter Father's Name" />
+                        </span>
+                        <span class="form-field" style="vertical-align: top">
+                            <label>
+                                Mother's Name
+                            </label>
+                            <input type="text" class="required-field-personal" id="mother-name" placeholder="Enter Mother's Name" />
+                        </span>
                     </div>
-                    <div><button type='submit' name="submit-btn" id="submit-btn">Submit</button></div>
+                    <br>
+                    <h3 id="address">Address</h3>
+                    <div data-wrapper-react="true" class="address">
+                            <span class="address" style="vertical-align: top">
+                                <label>
+                                    Street Address 
+                                </label>
+                                <input type="text" class="required-field-personal" id="line-1" placeholder="Enter Street Address" />
+                            </span>
+                    </div>
+                    <div data-wrapper-react="true" class="address">
+                            <span class="address" style="vertical-align: top">
+                                <br>
+                                <label>
+                                    Street Address Line-2 
+                                </label>
+                                <input type="text"  id="line-2" placeholder="Enter Street Address Line-2" />
+                            </span>
+                    </div>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align: top">
+                            <br>
+                            <label>
+                                Postal Code
+                            </label>
+                            <input type="text" class="required-field-personal" id="postal-code" placeholder="Enter Postal Code" />
+                        </span>
+                        <span class="form-field" style="vertical-align: top">
+                            <br>
+                            <label>
+                                City
+                            </label>
+                            <input type="text" placeholder="Enter City" id="city">
+                        </span>
+                    </div>
+                    <br>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align: top">
+                            <label>
+                                State
+                            </label>
+                            <input type="text" placeholder="Enter State" id="state">
+                        </span>
+                        <span class="form-field" style="vertical-align: top">
+                            <label>
+                                Country
+                            </label>
+                            <input type="text" placeholder="Enter Country" id="country">
+                        </span>
+                        <!-- <span class="Country" style="vertical-align: top">
+                            <label>
+                                Country
+                            </label>
+                            <select id="country" name="country">
+                                <option value="SC">Select Country</option>
+                                <option value="AF">Afghanistan</option>
+                                <option value="AL">Albania</option>
+                                <option value="DZ">Algeria</option>
+                                <option value="AD">Andorra</option>
+                                <option value="AO">Angola</option>
+                                <option value="AG">Antigua and Barbuda</option>
+                                <option value="AR">Argentina</option>
+                                <option value="AM">Armenia</option>
+                                <option value="AU">Australia</option>
+                                <option value="AT">Austria</option>
+                                <option value="AZ">Azerbaijan</option>
+                                <option value="BS">Bahamas</option>
+                                <option value="BH">Bahrain</option>
+                                <option value="BD">Bangladesh</option>
+                                <option value="BB">Barbados</option>
+                                <option value="BY">Belarus</option>
+                                <option value="BE">Belgium</option>
+                                <option value="BZ">Belize</option>
+                                <option value="BJ">Benin</option>
+                                <option value="BT">Bhutan</option>
+                                <option value="BO">Bolivia</option>
+                                <option value="BA">Bosnia and Herzegovina</option>
+                                <option value="BW">Botswana</option>
+                                <option value="BR">Brazil</option>
+                                <option value="BN">Brunei</option>
+                                <option value="BG">Bulgaria</option>
+                                <option value="BF">Burkina Faso</option>
+                                <option value="BI">Burundi</option>
+                                <option value="CV">Cabo Verde</option>
+                                <option value="KH">Cambodia</option>
+                                <option value="CM">Cameroon</option>
+                                <option value="CA">Canada</option>
+                                <option value="CF">Central African Republic</option>
+                                <option value="TD">Chad</option>
+                                <option value="CL">Chile</option>
+                                <option value="CN">China</option>
+                                <option value="CO">Colombia</option>
+                                <option value="KM">Comoros</option>
+                                <option value="CG">Congo (Congo-Brazzaville)</option>
+                                <option value="CR">Costa Rica</option>
+                                <option value="HR">Croatia</option>
+                                <option value="CU">Cuba</option>
+                                <option value="CY">Cyprus</option>
+                                <option value="CZ">Czechia (Czech Republic)</option>
+                                <option value="CD">Democratic Republic of the Congo</option>
+                                <option value="DK">Denmark</option>
+                                <option value="DJ">Djibouti</option>
+                                <option value="DM">Dominica</option>
+                                <option value="DO">Dominican Republic</option>
+                                <option value="TL">East Timor (Timor-Leste)</option>
+                                <option value="EC">Ecuador</option>
+                                <option value="EG">Egypt</option>
+                                <option value="SV">El Salvador</option>
+                                <option value="GQ">Equatorial Guinea</option>
+                                <option value="ER">Eritrea</option>
+                                <option value="EE">Estonia</option>
+                                <option value="SZ">Eswatini</option>
+                                <option value="ET">Ethiopia</option>
+                                <option value="FJ">Fiji</option>
+                                <option value="FI">Finland</option>
+                                <option value="FR">France</option>
+                                <option value="GA">Gabon</option>
+                                <option value="GM">Gambia</option>
+                                <option value="GE">Georgia</option>
+                                <option value="DE">Germany</option>
+                                <option value="GH">Ghana</option>
+                                <option value="GR">Greece</option>
+                                <option value="GD">Grenada</option>
+                                <option value="GT">Guatemala</option>
+                                <option value="GN">Guinea</option>
+                                <option value="GW">Guinea-Bissau</option>
+                                <option value="GY">Guyana</option>
+                                <option value="HT">Haiti</option>
+                                <option value="VA">Holy See</option>
+                                <option value="HN">Honduras</option>
+                                <option value="HU">Hungary</option>
+                                <option value="IS">Iceland</option>
+                                <option value="IN">India</option>
+                                <option value="ID">Indonesia</option>
+                                <option value="IR">Iran</option>
+                                <option value="IQ">Iraq</option>
+                                <option value="IE">Ireland</option>
+                                <option value="IL">Israel</option>
+                                <option value="IT">Italy</option>
+                                <option value="CI">Ivory Coast</option>
+                                <option value="JM">Jamaica</option>
+                                <option value="JP">Japan</option>
+                                <option value="JO">Jordan</option>
+                                <option value="KZ">Kazakhstan</option>
+                                <option value="KE">Kenya</option>
+                                <option value="KI">Kiribati</option>
+                                <option value="XK">Kosovo</option>
+                                <option value="KW">Kuwait</option>
+                                <option value="KG">Kyrgyzstan</option>
+                                <option value="LA">Laos</option>
+                                <option value="LV">Latvia</option>
+                                <option value="LB">Lebanon</option>
+                                <option value="LS">Lesotho</option>
+                                <option value="LR">Liberia</option>
+                                <option value="LY">Libya</option>
+                                <option value="LI">Liechtenstein</option>
+                                <option value="LT">Lithuania</option>
+                                <option value="LU">Luxembourg</option>
+                                <option value="MG">Madagascar</option>
+                                <option value="MW">Malawi</option>
+                                <option value="MY">Malaysia</option>
+                                <option value="MV">Maldives</option>
+                                <option value="ML">Mali</option>
+                                <option value="MT">Malta</option>
+                                <option value="MH">Marshall Islands</option>
+                                <option value="MR">Mauritania</option>
+                                <option value="MU">Mauritius</option>
+                                <option value="MX">Mexico</option>
+                                <option value="FM">Micronesia</option>
+                                <option value="MD">Moldova</option>
+                                <option value="MC">Monaco</option>
+                                <option value="MN">Mongolia</option>
+                                <option value="ME">Montenegro</option>
+                                <option value="MA">Morocco</option>
+                                <option value="MZ">Mozambique</option>
+                                <option value="MM">Myanmar (formerly Burma)</option>
+                                <option value="NA">Namibia</option>
+                                <option value="NR">Nauru</option>
+                                <option value="NP">Nepal</option>
+                                <option value="NL">Netherlands</option>
+                                <option value="NZ">New Zealand</option>
+                                <option value="NI">Nicaragua</option>
+                                <option value="NE">Niger</option>
+                                <option value="NG">Nigeria</option>
+                                <option value="KP">North Korea</option>
+                                <option value="MK">North Macedonia (formerly Macedonia)</option>
+                                <option value="NO">Norway</option>
+                                <option value="OM">Oman</option>
+                                <option value="PK">Pakistan</option>
+                                <option value="PW">Palau</option>
+                                <option value="PS">Palestine State</option>
+                                <option value="PA">Panama</option>
+                                <option value="PG">Papua New Guinea</option>
+                                <option value="PY">Paraguay</option>
+                                <option value="PE">Peru</option>
+                                <option value="PH">Philippines</option>
+                                <option value="PL">Poland</option>
+                                <option value="PT">Portugal</option>
+                                <option value="QA">Qatar</option>
+                                <option value="RO">Romania</option>
+                                <option value="RU">Russia</option>
+                                <option value="RW">Rwanda</option>
+                                <option value="KN">Saint Kitts and Nevis</option>
+                                <option value="LC">Saint Lucia</option>
+                                <option value="VC">Saint Vincent and the Grenadines</option>
+                                <option value="WS">Samoa</option>
+                                <option value="SM">San Marino</option>
+                                <option value="ST">Sao Tome and Principe</option>
+                                <option value="SA">Saudi Arabia</option>
+                                <option value="SN">Senegal</option>
+                                <option value="RS">Serbia</option>
+                                <option value="SC">Seychelles</option>
+                                <option value="SL">Sierra Leone</option>
+                                <option value="SG">Singapore</option>
+                                <option value="SK">Slovakia</option>
+                                <option value="SI">Slovenia</option>
+                                <option value="SB">Solomon Islands</option>
+                                <option value="SO">Somalia</option>
+                                <option value="ZA">South Africa</option>
+                                <option value="KR">South Korea</option>
+                                <option value="SS">South Sudan</option>
+                                <option value="ES">Spain</option>
+                                <option value="LK">Sri Lanka</option>
+                                <option value="SD">Sudan</option>
+                                <option value="SR">Suriname</option>
+                                <option value="SE">Sweden</option>
+                                <option value="CH">Switzerland</option>
+                                <option value="SY">Syria</option>
+                                <option value="TJ">Tajikistan</option>
+                                <option value="TZ">Tanzania</option>
+                                <option value="TH">Thailand</option>
+                                <option value="TG">Togo</option>
+                                <option value="TO">Tonga</option>
+                                <option value="TT">Trinidad and Tobago</option>
+                                <option value="TN">Tunisia</option>
+                                <option value="TR">Turkey</option>
+                                <option value="TM">Turkmenistan</option>
+                                <option value="TV">Tuvalu</option>
+                                <option value="UG">Uganda</option>
+                                <option value="UA">Ukraine</option>
+                                <option value="AE">United Arab Emirates</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="USA">United States of America</option>
+                                <option value="UY">Uruguay</option>
+                                <option value="UZ">Uzbekistan</option>
+                                <option value="VU">Vanuatu</option>
+                                <option value="VE">Venezuela</option>
+                                <option value="VN">Vietnam</option>
+                                <option value="YE">Yemen</option>
+                                <option value="ZM">Zambia</option>
+                                <option value="ZW">Zimbabwe</option>
+
+                            </select> 
+                        </span> 
+                    </div>
+                    <div class="form-pagebreak" data-component="pagebreak">
+                        <div class="form-pagebreak-next-container">
+                            <button id="personal_nextBtn" type="button" class="nextBtn" data-component="pagebreak-next">
+                                Next
+                            </button>
+                        </div>
+                    </div>--->
                 </form>
+            </div>
+            <div class="div-application-form-educational">
+                <div class="header-text httal htvam">
+                    <h2 class="form-header" data-component="header">Education Details</h2>
+                <hr>
+                </div>
+                <!--Application Form(Educational Details)-->
+                <form action="#" class="application-form-educational">
+                    <h3 id="result">School</h3>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                Secondary School
+                            </label>
+                            <input type="text" class="required-field" id="secondary-school"/>
+                        </span>
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                Higher Secondary School
+                            </label>
+                            <input type="text" class="required-field" id="higher-secondary-school"/>
+                        </span>
+                        <br>
+                    </div>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                Graduation Date
+                            </label>
+                            <input type="date" class="required-field" id="graduation-date"/>
+                        </span>
+                    </div>
 
-          </div>
-        </section><!-- End Contact Section -->
-    </main><!-- End #main -->
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-    <!-- Vendor JS Files -->
-    <script src="{% static 'vendor/purecounter/purecounter_vanilla.js' %}"></script>
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'vendor/glightbox/js/glightbox.min.js' %}"></script>
-    <script src="{% static 'vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
-    <script src="{% static 'vendor/swiper/swiper-bundle.min.js' %}"></script>
-
-    <!-- Template Main JS File -->
-    <script src="{% static 'js/main.js' %}"></script>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <div class="form-field">
+                            <p class="mb-2">Upload 10th Marksheet:</p><input type="file" class="form-control" name="marks_10" id="marks_10" required="">
+                        </div>
+                        <div class="form-field">
+                            <p class="mb-2">Upload 12th Marksheet:</p><input type="file" class="form-control" name="marks_12" id="marks_12" required="">
+                        </div>
+                    </div>
+                    <h3 id="result">Result</h3>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                SSC Percentage
+                            </label>
+                            <input type="text" class="required-field" id="SSC-percentage"/>
+                        </span>
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                HSC Percentage
+                            </label>
+                            <input type="text" class="required-field" id="HSC-percentage"/>
+                        </span>      
+                    </div>
+                    <div data-wrapper-react="true" class="form-pair">
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                GUJCET PR
+                            </label>
+                            <input type="text" class="required-field" id="GUJCET-percentile-rank"/>
+                        </span>
+                        <span class="form-field" style="vertical-align:top">
+                            <label aria-hidden="false">
+                                JEE-Main Percentile
+                            </label>
+                            <input type="text" class="required-field" id="JEE-main-percentile-rank"/>
+                        </span>
+                    </div>
+                    <!---<div class="form-pagebreak" class="form-field" data-component="pagebreak">
+                        <div class="form-pagebreak-back-container">
+                            <button id="educational_backBtn" type="button" class="backBtn" data-component="pagebreak-back">
+                                Back
+                            </button>
+                        </div>
+                        <div class="form-pagebreak-next-container">
+                            <button id="educational_nextBtn" type="button" class="nextBtn" data-component="pagebreak-next">
+                                Next
+                            </button>
+                        </div>
+                    </div>--->
+                </form> 
+            </div>
+            <div class="div-application-form-payment">
+                <div class="header-text httal htvam">
+                    <h2 class="form-header" data-component="header">Application Fee</h2>
+                <hr>
+                </div>
+                <!--Application Form(Payment Details)-->
+                <form action="#" class="application-form-payment">
+                    <label class="title">Payment Methods:</label>
+                    <br>
+                    <br>
+                    <div class="form-multiple-column" data-columncount="3" role="group" aria-labelledby="label_50" data-component="checkbox">
+                        <span class="form-checkbox-item">
+                            <label for="credit-card-checkbox">
+                                Credit Card
+                            </label>
+                            <input type="checkbox" id="credit-card-checkbox" value="credit-card">
+                        </span>
+                        <span class="form-checkbox-item">
+                            <label for="upi-checkbox">
+                                UPI
+                            </label>
+                            <input type="checkbox" id="upi-checkbox" value="UPI">
+                        </span>
+                        <span class="form-checkbox-item">
+                            <label for="qr-code-checkbox">
+                                QR Code
+                            </label>
+                            <input type="checkbox" id="qr-code-checkbox" value="QR-code">
+                        </span>
+                    </div>
+                    <!---<div class="form-pagebreak" data-component="pagebreak">
+                        <div class="form-pagebreak-back-container">
+                            <button id="payment_backBtn" type="button" class="backBtn" data-component="pagebreak-back">
+                                Back
+                            </button>
+                        </div>
+                        <div class="form-pagebreak-submit-container">
+                            <button id="payment_submitBtn" type="button" class="submitBtn" data-component="pagebreak-submit">
+                                Submit Form
+                            </button>
+                        </div>
+                    </div>--->
+                </form> 
+            </div>
+        </div>
+    </div>
+    <script src="./js/applicationForm.js"></script>
 </body>
 </html>

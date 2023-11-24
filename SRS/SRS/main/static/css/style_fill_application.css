@@ -1,0 +1,153 @@
+/* Reset some default styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container styling */
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Form styling */
+.forms-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.header-text {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-header {
+    color: #007BFF;
+}
+
+.form-subHeader {
+    color: #666;
+}
+
+/* Apply uniform width to input fields */
+.form-pair {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.address {
+    display: block;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+.form-pair label {
+    flex-basis: calc(100% - 10px); /* Adjust the percentage as needed */
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.address label {
+    flex-basis: calc(30% - 10px); /* Adjust the percentage as needed */
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+.form-pair input,
+.form-pair select,
+.form-pair textarea {
+    flex-basis: calc(80% - 20px); /* Adjust the percentage as needed */
+    width: 230px;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+.address input {
+    flex-basis: calc(70% - 10px); /* Adjust the percentage as needed */
+    width: 60%;
+    padding: 8px;
+    box-sizing: border-box;
+    margin-top: 5px;
+}
+
+/* Add padding between elements of the same div */
+.form-pair > * {
+    margin-right: 20px; /* Adjust the margin as needed */
+}
+
+/* Apply hover effect to buttons */
+.button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.submit-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF; /* Green color, you can change it */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #0056b3; /* Darker green color on hover, you can change it */
+}
+
+
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Adjust the styles as needed */
+.header-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #007bff; /* Example color, you can change it */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#logoutButton {
+    /* Add specific styles for the Logout button */
+    background-color: #dc3545; /* Example color, you can change it */
+}
+
+
+/* Responsive styling for smaller screens */
+@media (max-width: 600px) {
+    .form-pair label,
+    .form-pair input,
+    .form-pair select,
+    .form-pair textarea {
+        flex-basis: 100%;
+    }
+
+    /* Remove right margin for responsiveness */
+    .form-pair > * {
+        margin-right: 0;
+    }
+}

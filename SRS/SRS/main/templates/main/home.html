@@ -1,0 +1,461 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Student Registration System</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="{% static 'images/srs.jpg' %}" rel="icon">
+  <link href="{% static 'images/srs.jpg' %}" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Dosis:300,400,500,,600,700,700i|Lato:300,300i,400,400i,700,700i"
+    rel="stylesheet">
+
+
+  <link href="{% static 'css/others/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'css/others/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/others/boxicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/others/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/others/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/home.css' %}" rel="stylesheet">
+</head>
+
+<body>
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top">
+    <div class="container d-flex align-items-center justify-content-between">
+
+      <a href="{% url 'Home' %}" class="logo"><img src="{% static 'images/dalogo.png' %}" alt=""
+          class="images-fluid"></a>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+          <li><a class="nav-link scrollto" href="#about">About Us</a></li>
+          <li><a class="nav-link scrollto" href="#services">Academics</a></li>
+          <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
+          <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
+          {% if not request.user.is_authenticated %}
+          <li><a class="nav-link scrollto" href="{% url 'Login' %}">Login</a></li>
+          {% else %}
+          <li><a class="nav-link scrollto" href="{% url 'Dashboard' %}">Dashboard</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'Logout' %}">Logout</a></li>
+          {% endif %}
+          <!-- <li><a class="nav-link scrollto" href="{% url 'StartTest' %}">Take Test</a></li> -->
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items pb-0">
+    <div class="col-lg-12 order-1 order-lg-2 hero-images al ">
+      <a class="nav-link scrollto" href="#about"> <img src="{% static 'images/DAIICT_NAAC_Grade_award_2023.png' %}"
+          width="100%" height="100%" class="images-fluid" alt=""></a>
+    </div>
+    </div>
+    </div>
+
+  </section><!-- End Hero -->
+
+ <!-- ======= Testimonials Section ======= -->
+ <section id="testimonials" class="testimonials" style="font-size: large;">
+  <div class="container position-relative">
+
+    <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
+      <div class="swiper-wrapper">
+
+
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+            <img src="{% static 'images/da.jpg' %}" class="testimonial-img" alt="">
+            <p>
+              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+              DA-IICT Achieves NAAC Grade A+ Accreditation
+              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+            </p>
+          </div>
+        </div><!-- End testimonial item -->
+
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+            <p>
+              <br><br><br>
+              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+
+              IIRF University Ranking 2023, places DA-IICT at No. 1 position under the category of overall State
+              Private Universities
+              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+            </p>
+          </div>
+        </div><!-- End testimonial item -->
+
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+            <p>
+              <br><br><br>
+              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+              Test dates announced for the entrance test of 2024 batch.
+              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+            </p>
+          </div>
+        </div><!-- End testimonial item -->
+
+
+        <div class="swiper-slide">
+          <div class="testimonial-item">
+            <p>
+              <br><br><br>
+              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+              Results Announced.
+              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
+            </p>
+          </div>
+        </div><!-- End testimonial item -->
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+
+  </div>
+</section><!-- End Testimonials Section -->
+
+  <main id="main">
+
+    <!-- ======= About Section ======= -->
+    <section id="about" class="about">
+      <div class="container">
+
+        <div class="row">
+          <div class="col-xl-5 col-lg-6 d-flex justify-content-center video-box align-items-stretch position-relative">
+            <a href="https://www.youtube.com/watch?v=Amige1Yps3g" class="glightbox play-btn mb-4"></a>
+          </div>
+
+          <div
+            class="col-xl-7 col-lg-6 icon-boxes d-flex flex-column align-items-stretch justify-content-center py-5 px-lg-5">
+            <div class="icon-box">
+              <h4 class="title">Vision</h4>
+              <p class="description"> To help build a knowledge-led society founded on intellectual competitiveness for
+                global leadership.</p>
+            </div>
+
+            <div class="icon-box">
+              <!-- <div class="icon"><i class="bx bx-fingerprint"></i></div> -->
+              <h4 class="title">Mission</h4>
+              <p class="description">To become a first choice academic institute having high caliber students, a dynamic
+                faculty, a sensitive administration, functioning within an atmosphere of innovative research,
+                emphasizing academic cooperation and global collaboration. To nurture graduates to be civically engaged
+                individuals who recognize their responsibility and role in their communities and the world.</p>
+            </div>
+
+            <div class="icon-box">
+              <!-- <div class="icon"><i class="bx bx-gift"></i></div> -->
+              <h4 class="title">Quality Policy</h4>
+              <p class="description">To pursue global standards of excellence in all our endeavors, namely, teaching,
+                research, consultancy and continuing education focusing on Information and Communication Technology
+                (ICT) and allied areas. To remain accountable in our core and support function, through processes of
+                self-evaluation and continuous improvement.</p>
+            </div>
+
+            <div class="icon-box">
+              <!-- <div class="icon"><i class="bx bx-atom"></i></div> -->
+              <h4 class="title">Accreditation</h4>
+              <p class="description">The National Assessment and Accreditation Council, Government of India has
+                accredited DA-IICT with an 'A+' Grade in 2023.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- End About Section -->
+    
+
+    <!-- ======= Services Section ======= -->
+    <section id="services" class="services section-bg">
+      <div class="container mt-5">
+
+        <div class="section-title" style="text-align:justify ;">
+          <h2 style="text-align: center;">Academics</h2>
+          <p><align-items:center>DA-IICT has played a pioneering role in developing innovative undergraduate programs in
+              Information and Communication Technology (ICT) in India since 2001. The pedagogy of ICT discipline should
+              make a well-integration of Information Technology, Communication Technology, Electronics Engineering and
+              Social Sciences courses with a solid grounding in Mathematics and Science, Humanities and Social Sciences,
+              which a student cannot be trained in conventional Computer Science & Engineering or Electronics and
+              Communication Engineering alone.</align-items:center> </p>
+          <br>
+
+
+          <align-items:left>
+            <p> In recent times, the institute has introduce another undergraduate program in Mathematics and Computing
+              (MnC) that provides a strong foundation in Mathematics, Statistics and Computer Science followed by
+              interdisciplinary electives and project works in industry relevant areas.</p>
+
+            <p>The institute offers THREE undergraduate programs, Bachelor of Technology (B.Tech.), a four-year (eight
+              semesters) of duration, leading to the degrees of</p>
+            <br>
+            <p style="padding-left: 15px;"><b>1. Bachelor of Technology in Information and Communication Technology –
+                B.Tech. (ICT)</p>
+            <p style="padding-left: 15px;">2. Bachelor of Technology (Honours) in ICT with minor in Computational
+              Science – B.Tech. (Honours) in ICT
+              with minor in Computational Science</p>
+            <p style="padding-left: 15px;">3. Bachelor of Technology in Mathematics and Computing – B.Tech. (MnC)</b>
+            </p>
+            <br>
+            <p>The curricular in all our undergraduate programs are structured with foundational courses, elective
+              courses in different kinds and internships/project work. The institute sees itself as a civic institution
+              deeply committed to seeing its students as responsible citizens. Its social sciences courses, its variety
+              of internships are designed to increase social commitment and competence as citizens understanding the
+              nature of societal and organizational needs.
+        </div></align-items:left> </p>
+
+        <div class="row">
+          <div class="col-lg-4 col-md-6">
+            <div class="icon-box">
+              <div class="icon" style="padding-left: 20px;"><i class="bi bi-chat-text" style="color: #ff689b;"></i>
+              </div>
+              <h4 class="title">B.Tech.(ICT)</h4>
+              <p class="description">B Tech in Information and Communication Technology is a four-year engineering
+                course. The B Tech ICT course will teach students about image processing, data communication,
+                networking, data mining, testing, and software design.</p>
+            </div>
+          </div>
+          <div class="col-lg-4 col-md-6" data-wow-delay="0.1s">
+            <div class="icon-box">
+              <div class="icon" style="padding-left: 20px;"><i class="bi bi-chat-text"
+                  style="color: rgb(160, 160, 0);"></i></div>
+              <h4 class="title">B.Tech.(ICT with minors in CS)</h4>
+              <p class="description">The B. Tech. (Honours) in ICT with minor in Computational Science requires a
+                student to complete additional 18 credits (four courses) in the core and elective components of
+                Computational Science in addition to the B. Tech.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-4 col-md-6" data-wow-delay="0.1s">
+            <div class="icon-box">
+              <div class="icon" style="padding-left: 20px;"><i class="bi bi-chat-text" style="color: #3fcdc7;"></i>
+              </div>
+              <h4 class="title">B.Tech.(MnC)</h4>
+              <p class="description">Mathematics and Computing (MnC) is a fusion of Mathematics and Computer Science
+                that has obtained wide acceptance as a distinct discipline over the past few years.</p>
+            </div>
+          </div>
+        </div>
+    </section><!-- End Services Section -->
+
+    <!-- ======= Gallery Section ======= -->
+    <section id="gallery" class="gallery">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Gallery</h2>
+        </div>
+
+        <div class="row no-gutters">
+
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'images/gallery/13.jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+                <img src="{% static 'images/gallery/13.jpg' %}" alt="" class="images-fluid">
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'images/gallery/11.jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+                <img src="{% static 'images/gallery/11.jpg' %}" alt="" class="images-fluid">
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'images/gallery/N15jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+                <img src="{% static 'images/gallery/N15.jpg' %}" alt="" class="images-fluid">
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'images/gallery/samay.jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+                <img src="{% static 'images/gallery/samay.jpg' %}" alt="" class="images-fluid">
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'images/gallery/synapse.jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+                <img src="{% static 'images/gallery/synapse.jpg' %}" alt="" class="images-fluid">
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'images/gallery/map.jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+                <img src="{% static 'images/gallery/map.jpg' %}" alt="" class="images-fluid">
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'images/gallery/26.jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+                <img src="{% static 'images/gallery/26.jpg' %}" alt="" class="images-fluid">
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-4">
+            <div class="gallery-item">
+              <a href="{% static 'images/gallery/1.jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+                <img src="{% static 'images/gallery/1.jpg' %}" alt="" class="images-fluid">
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Gallery Section -->
+
+    <!-- ======= Contact Section ======= -->
+    <section id="contact" class="contact">
+      <div class="container">
+
+        <div class="section-title">
+          <h2>Contact</h2>
+        </div>
+
+        <div>
+          <div class="mapouter">
+            <div class="gmap_canvas">
+              <iframe width="1000" height="250" id="gmap_canvas"
+                src="https://maps.google.com/maps?q=daiict&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
+                scrolling="no" marginheight="0" marginwidth="0"></iframe>
+              <!-- <a href="https://online.stopwatch-timer.net/">timer stopwatch</a><br><a href="https://www.tabclocktab.com/"></a><br> -->
+              <style>
+                .mapouter {
+                  position: relative;
+                  text-align: center;
+                  height: 250px;
+                  width: 100%;
+                }
+              </style><a href="https://www.embedgooglemap.net"></a>
+              <style>
+                .gmap_canvas {
+                  overflow: hidden;
+                  background: none !important;
+                  height: 250px;
+                  width: 100%;
+                }
+              </style>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-5">
+
+          <div class="col-lg-4">
+            <div class="info">
+              <div class="address">
+                <i class="bi bi-geo-alt"></i>
+                <h4>Location:</h4>
+                <p>DA-IICT, DA-IICT Road,
+                  Gandhinagar 382 007, Gujarat (India)</p>
+              </div>
+
+              <div class="email">
+                <i class="bi bi-envelope"></i>
+                <h4>Email:</h4>
+                <p>info@daiict.ac.in</p>
+              </div>
+
+              <div class="phone">
+                <i class="bi bi-phone"></i>
+                <h4>Call:</h4>
+                <p>(+91) 079 - 6826 1700</p>
+              </div>
+
+            </div>
+
+          </div>
+          <div class="col-lg-8 mt-5 mt-lg-0">
+
+            <form class="php-email-form" action="{% url 'Home' %}" method="post">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6 form-group">
+                  <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                </div>
+                <div class="col-md-6 form-group mt-3 mt-md-0">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" required>
+                </div>
+              </div>
+              <div class="form-group mt-3">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+              </div>
+              <div class="form-group mt-3">
+                <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
+              </div>
+              <div class="text-center"><button type='submit' onclick="MsgFunc()">Send Mail</button></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section><!-- End Contact Section -->
+
+  </main><!-- End #main -->
+  <!-- ======= Footer ======= -->
+  <footer id="footer" style="background-color: rgb(171, 240, 255);">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+        </div>
+      </div>
+    </div>
+
+    <div class="container vh-3">
+      <div class="row">
+        <div class="copyright col-lg-5 py-3">
+          &copy; Copyright <strong><span>DAIICT</span></strong>. All Rights Reserved
+        </div>
+        <div class="col-lg-4 col-md-6 right footer-links">
+          <div class="social-links mt-2 " style="text-align: right; position: absolute; right: 0; font-size: 30px;">
+            <a href="https://twitter.com/daiictofficial?lang=en" class="twitter"><i class="bx bxl-twitter"></i></a>
+            <a href="https://www.facebook.com/DAIICT/" class="facebook"><i class="bx bxl-facebook"></i></a>
+            <a href="https://www.instagram.com/daiictofficial/" class="instagram"><i class="bx bxl-instagram"></i></a>
+            <a href="https://in.linkedin.com/school/dhirubhai-ambani-institute-of-information-and-communication-technology/"
+              class="linkedin"><i class="bx bxl-linkedin"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer><!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <script src="{% static 'js/others/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'js/others/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/others/glightbox.min.js' %}"></script>
+  <script src="{% static 'js/others/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'js/others/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'js/home.js' %}"></script>
+
+  <script>
+    function MsgFunc() {
+      alert('Message Sent')
+    }
+  </script>
+</body>
+
+</html>
