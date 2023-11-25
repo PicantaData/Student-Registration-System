@@ -675,6 +675,292 @@ class Test_view_startTest(TestCase):
 
 
 
+class Test_view_nextQuestion(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser@gmail.com', password='TestPassword123')
+        self.application = models.Application.objects.create(
+            student=self.user,
+            name='Test Applicant',
+            gender='M',
+            dob=date(2000, 1, 1),
+            father='Test Person1',
+            mother='Test Person2',
+            phone='9988776655',
+            alt_phone='9876543210',
+            address='Test Address',
+            app_status='P',
+            ssc='School1',
+            ssc_per='90',
+            hsc='School2',
+            hsc_per='85',
+            gujcet='GujCET Details',
+            jee='JEE Details',
+            id_proof='Aadhar.pdf',
+            photo = 'photo.jpg',
+            marks_10='test_10.pdf', 
+            marks_12='test_12.pdf',
+        )
+        self.question1 = models.Question.objects.create(
+            qid=1,
+            ques='Ques1', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='2'
+        )
+        self.question2 = models.Question.objects.create(
+            qid=2,
+            ques='Ques2', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='1'
+        )
+        self.question3 = models.Question.objects.create(
+            qid=3,
+            ques='Ques3', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='4'
+        )
+        self.test = models.Test.objects.create(app_no=self.application, test_start=timezone.now())
+    
+
+    def test_get_nextQuestion_unauthorized(self):
+        response = self.client.get(reverse('Next_Question', args=(self.question1.qid,)))
+
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.url, reverse('StartTest'))
+
+
+    def test_get_nextQuestion_authorized(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        response = self.client.get(reverse('Next_Question', args=(self.question1.qid,)))
+
+        self.assertEqual(response.status_code,200)
+        self.assertTemplateUsed(response, 'questions.html')
+        self.assertTrue('question' in response.context)
+        self.assertTrue('options' in response.context)
+        self.assertEqual(models.ApplicantResponse.objects.count(), 1)
+
+    
+    def test_nextQuestion_invalid_question_id(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        invalid_question_id = 490
+
+        with self.assertRaises(models.Question.DoesNotExist):
+            response = self.client.get(reverse('Next_Question', args=(invalid_question_id,)))
+
+    
+    def test_nextQuestion_test_already_ended(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        self.test.delete()
+        past_time1 = timezone.now() - timedelta(hours=2)
+        past_time2 = timezone.now() - timedelta(hours=1)  # Assuming test ended 1 hour ago
+        self.test = models.Test.objects.create(
+            app_no = self.application,
+            test_start = past_time1,
+            test_end = past_time2,
+        )
+
+        response = self.client.get(reverse('Next_Question', args=(self.question1.qid,)), follow=True)
+
+        self.assertRedirects(response, reverse('Dashboard'))
+        self.assertContains(response, 'Your test has already ended! You can now view your result')
+
+    
+    def test_nextQuestion_clearResponse(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        response = self.client.post(reverse('Next_Question', args=(self.question2.qid,)), {'clear':''})
+
+        user_response = models.ApplicantResponse.objects.get(app_no=self.application,ques=self.question2)
+        self.assertEqual(user_response.response, '')
+        self.assertEqual(response.status_code, 302)
+
+    
+    def test_nextQuestion_noResponse(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        response = self.client.post(reverse('Next_Question', args=(self.question1.qid,)), {'submit':''})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('Next_Question', args=(self.question2.qid,)))
+
+    
+    def test_nextQuestion_withResponse(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        response = self.client.post(reverse('Next_Question', args=(self.question1.qid,)), {'answer':'2','submit':''})
+
+        user_response = models.ApplicantResponse.objects.get(app_no=self.application,ques=self.question1)
+        self.assertEqual(user_response.response, '2')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('Next_Question', args=(self.question2.qid,)))
+
+
+    def test_nextQuestion_lastQuestion(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        response = self.client.post(reverse('Next_Question', args=(self.question3.qid,)), {'answer':'3','submit':''}, follow=True)
+
+        self.assertRedirects(response, reverse('Next_Question', args=(self.question1.qid,)))
+        self.assertContains(response, 'You have answered all the question. Please review your answers and submit')
+
+    
+    def test_nextQuestion_EndingTest(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        response = self.client.post(reverse('Next_Question', args=(self.question3.qid,)), {'end':''})
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('EndTest'))
+
+
+
+class Test_view_EndTest(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser@gmail.com', password='TestPassword123')
+        self.application = models.Application.objects.create(
+            student=self.user,
+            name='Test Applicant',
+            gender='M',
+            dob=date(2000, 1, 1),
+            father='Test Person1',
+            mother='Test Person2',
+            phone='9988776655',
+            alt_phone='9876543210',
+            address='Test Address',
+            app_status='P',
+            ssc='School1',
+            ssc_per='90',
+            hsc='School2',
+            hsc_per='85',
+            gujcet='GujCET Details',
+            jee='JEE Details',
+            id_proof='Aadhar.pdf',
+            photo = 'photo.jpg',
+            marks_10='test_10.pdf', 
+            marks_12='test_12.pdf',
+        )
+        self.question1 = models.Question.objects.create(
+            qid=1,
+            ques='Ques1', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='2'
+        )
+        self.question2 = models.Question.objects.create(
+            qid=2,
+            ques='Ques2', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='1'
+        )
+        self.question3 = models.Question.objects.create(
+            qid=3,
+            ques='Ques3', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='4'
+        )
+        self.question4 = models.Question.objects.create(
+            qid=4,
+            ques='Ques4', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='1'
+        )
+        self.test = models.Test.objects.create(app_no=self.application, test_start=timezone.now())
+        self.response1 = models.ApplicantResponse.objects.create(app_no=self.application, ques=self.question1, response='2')
+        self.response2 = models.ApplicantResponse.objects.create(app_no=self.application, ques=self.question2, response='3')
+        self.response3 = models.ApplicantResponse.objects.create(app_no=self.application, ques=self.question3, response='4')
+        self.response4 = models.ApplicantResponse.objects.create(app_no=self.application, ques=self.question4, response='')
+        self.EndTest_url = reverse('EndTest')
+    
+
+    def test_get_EndTest_unauthorized(self):
+        response = self.client.get(self.EndTest_url)
+
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.url, reverse('StartTest'))
+
+
+    def test_get_EndTest_authorized(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        response = self.client.get(self.EndTest_url)
+
+        user_application = models.Application.objects.get(student=self.user)
+        responses = models.ApplicantResponse.objects.filter(app_no=user_application)
+        score = 0
+        for i in responses:
+            question = i.ques
+            if question.ans == i.response:
+                score += 1
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'result.html')
+        self.assertEqual(response.context['score'], score)
+
+
+
+class Test_view_Result(TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        self.user = User.objects.create_user(username='testuser@gmail.com', password='TestPassword123')
+        self.application = models.Application.objects.create(
+            student=self.user,
+            name='Test Applicant',
+            gender='M',
+            dob=date(2000, 1, 1),
+            father='Test Person1',
+            mother='Test Person2',
+            phone='9988776655',
+            alt_phone='9876543210',
+            address='Test Address',
+            app_status='P',
+            ssc='School1',
+            ssc_per='90',
+            hsc='School2',
+            hsc_per='85',
+            gujcet='GujCET Details',
+            jee='JEE Details',
+            id_proof='Aadhar.pdf',
+            photo = 'photo.jpg',
+            marks_10='test_10.pdf', 
+            marks_12='test_12.pdf',
+        )
+        self.question1 = models.Question.objects.create(
+            qid=1,
+            ques='Ques1', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='2'
+        )
+        self.question2 = models.Question.objects.create(
+            qid=2,
+            ques='Ques2', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='1'
+        )
+        self.question3 = models.Question.objects.create(
+            qid=3,
+            ques='Ques3', 
+            op1='1', op2='2', op3='3', op4='4', 
+            ans='4'
+        )
+        self.test = models.Test.objects.create(app_no=self.application, test_start='2023-11-25T12:00:00Z', test_end='2023-11-25T12:05:00Z', score=2)
+        self.Result_url = reverse('Result')
+
+
+    def test_get_Result_unauthorized(self):
+        response = self.client.get(self.Result_url)
+
+        self.assertEqual(response.status_code,302)
+        self.assertEqual(response.url, '/login/?next=/test/result')
+
+
+    def test_get_Result_authorized(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
+        response = self.client.get(self.Result_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'result.html')
+        self.assertEqual(response.context['total'], 3)
+        self.assertEqual(response.context['score'], 2)
+
+
+
 class Test_view_logout(TestCase):
 
     def setUp(self):
