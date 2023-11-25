@@ -490,49 +490,49 @@ class Test_view_FillApplication(TestCase):
         self.assertTemplateUsed(response, 'fill_application.html')
 
     
-    # def test_application_creation(self):
-    #     self.client.login(username='testuser@gmail.com', password='TestPassword123')
+    def test_application_creation(self):
+        self.client.login(username='testuser@gmail.com', password='TestPassword123')
 
-    #     # Prepare file data
-    #     id_file = SimpleUploadedFile("Aadhar.pdf", b"file_content", content_type="application/pdf")
-    #     photo_file = SimpleUploadedFile("photo.jpg", b"file_content", content_type="image/jpeg")
-    #     marks_10_file = SimpleUploadedFile("10marks.pdf", b"file_content", content_type="application/pdf")
-    #     marks_12_file = SimpleUploadedFile("12marks.pdf", b"file_content", content_type="application/pdf")
+        # Prepare file data
+        id_file = SimpleUploadedFile("Aadhar.pdf", b"file_content", content_type="application/pdf")
+        photo_file = SimpleUploadedFile("photo.jpg", b"file_content", content_type="image/jpeg")
+        marks_10_file = SimpleUploadedFile("10marks.pdf", b"file_content", content_type="application/pdf")
+        marks_12_file = SimpleUploadedFile("12marks.pdf", b"file_content", content_type="application/pdf")
 
-    #     data = {
-    #         'fname': 'Test',
-    #         'mname': '-',
-    #         'lname': 'Applicant',
-    #         'gender':'M',
-    #         'dob':date(2000, 1, 1),
-    #         'father':'Test Person1',
-    #         'mother':'Test Person2',
-    #         'phone':'9988776655',
-    #         'alt_phone':'9876543210',
-    #         'line-1':'Address Line1',
-    #         'line-2':'Address Line2',
-    #         'city':'TestCity',
-    #         'state':'TestState',
-    #         'country':'TestCountry',
-    #         'postal-code':'354765',
-    #         'app_status':'P',
-    #         'ssc':'School1',
-    #         'ssc_per':'90',
-    #         'hsc':'School2',
-    #         'hsc_per':'85',
-    #         'gujcet':'GujCET Details',
-    #         'jee':'JEE Details',
-    #         'id_proof':id_file,
-    #         'photo':photo_file,
-    #         'marks_10':marks_10_file, 
-    #         'marks_12':marks_12_file,
-    #     }
+        data = {
+            'fname': 'Test',
+            'mname': '-',
+            'lname': 'Applicant',
+            'gender':'M',
+            'dob':date(2000, 1, 1),
+            'father':'Test Person1',
+            'mother':'Test Person2',
+            'phone':'9988776655',
+            'alt_phone':'9876543210',
+            'line-1':'Address Line1',
+            'line-2':'Address Line2',
+            'city':'TestCity',
+            'state':'TestState',
+            'country':'TestCountry',
+            'postal-code':'354765',
+            'app_status':'P',
+            'ssc':'School1',
+            'ssc_per':'90',
+            'hsc':'School2',
+            'hsc_per':'85',
+            'gujcet':'GujCET Details',
+            'jee':'JEE Details',
+            'id_proof':id_file,
+            'photo':photo_file,
+            'marks_10':marks_10_file, 
+            'marks_12':marks_12_file,
+        }
 
-    #     response = self.client.post(self.application_url, data=data)
+        response = self.client.post(self.application_url, data=data)
 
-    #     self.assertEqual(models.Application.objects.count(), 1) 
-    #     self.assertEqual(response.status_code, 302)
-    #     self.assertRedirects(response, reverse('Dashboard'))
+        self.assertEqual(models.Application.objects.count(), 1) 
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('Dashboard'))
 
 
 
