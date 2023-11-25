@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endpage/Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            height: 100vh;
+            margin: 0;
+            background-color: rgb(126, 176, 220);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            background-color: #333;
+            color: #fff;
+            padding: 50px;
+            text-align: center;
+            width: 120px; /* Adjusted width for the sidebar */
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            font-size: 16px;
+            color: #fff;
+            text-decoration: none;
+            margin: 30px 0;
+        }
+
+        .card {
+            width: calc(100% - 140px); /* Adjusted width to accommodate the sidebar */
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 6px solid #000000;
+            border-radius: 10px;
+            padding: 30px; /* Adjusted padding for the card */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+            text-align: center; /* Center text in the card */
+        }
+
+        h1 {
+            font-size: 28px; /* Adjusted font size for the heading */
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        #scoreDisplay {
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        #additionalInfo {
+            width: 80px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <a href="{% url 'Home' %}">Home</a>
+        <a href="{% url 'Dashboard' %}">Dashboard</a>
+        <a href="{% url 'Logout' %}">Logout</a>
+    </div>
+    <div class="card">
+        <h1 style="margin-top: auto;">Result </h1>
+        <p id="scoreDisplay">Score/Total: {{score}}/{{total}}</p>
+
+    </div>
+
+</body>
+</html>

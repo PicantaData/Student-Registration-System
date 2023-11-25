@@ -4,12 +4,29 @@ from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from random import randint
 from SRS import settings
-from .models import Application, Notification, Question, ApplicantResponse
+from .models import Application, Notification, Question, ApplicantResponse, Test
 from .validator import MinimumLengthValidator, NumberValidator, UppercaseValidator
+from django.contrib.auth.views import redirect_to_login
+from django.urls import reverse
+from datetime import datetime, timedelta
+from django.utils import timezone
+
+@staff_member_required
+def populateTest(request):
+    if request.method == 'POST':
+        startTime = request.POST['start-time']
+        endTime = request.POST['end-time']
+        applications = Application.objects.all()
+        for application in applications:
+            application.test_start = startTime
+            application.test_end = endTime
+            application.save()
+    return render(request, 'admin_startTest.html')
 
 
 def send_otp(email):
@@ -31,7 +48,11 @@ def Home(request):
         send_mail(subject, message, from_email, to_list)
         return render(request, 'home.html')
     
-    return render(request, 'home.html')
+    notifications = Notification.objects.filter(filter_flag='E')
+    context = {'notifications': notifications}
+
+    return render(request, 'home.html', context=context)
+
 
 def Register(request):
     if request.method == 'POST':
@@ -57,6 +78,7 @@ def Register(request):
                 return render(request, 'register.html')
 
             otp = send_otp(email)
+            # otp = 0
             request.session['otp'] = otp
             request.session['email'] = email
             request.session['password'] = password
@@ -77,8 +99,10 @@ def Register(request):
         
     return render(request, 'register.html')
 
+
 def Login(request):
     if request.method == 'POST':
+        # print(request.POST)
         email = request.POST['signin-email']
         password = request.POST['signin-password']
 
@@ -86,18 +110,26 @@ def Login(request):
 
         if user is not None:
             login(request, user)
+            next = request.GET.get('next')
             try:
                 app = Application.objects.get(student=user)
             except Application.DoesNotExist:
-                return redirect('FillApplication')
-
-            return redirect('Dashboard')
-        
+                if next:
+                    messages.error(request, "The registration period is over! You are not eligible to give test.")
+                    return redirect('Login')
+                else:                    
+                    return redirect('FillApplication')
+            
+            if next:
+                return redirect(next)
+            else:
+                return redirect('Dashboard')
         else:
             messages.error(request, 'Incorrect Email or Password!!!')
             return render(request, 'login.html')
 
     return render(request, 'login.html')
+
 
 def Forget(request):
     if request.method=='POST':
@@ -146,20 +178,37 @@ def Forget(request):
 
     return render(request, 'forget.html')
 
+
 @login_required
 def FillApplication(request):
     user = request.user
     if request.method == 'POST':
-        print(request.POST)
-        print(request.FILES)
-        name = request.POST['name']
+        # print(request.POST)
+        # print(request.FILES)
+        name = request.POST['fname'] + ' ' + request.POST['mname'] + ' ' + request.POST['lname']
+        gender = request.POST.get('gender')
         dob = request.POST['dob']
-        address = request.POST['address']
+
+        
+        address = request.POST['line-1'] + ', ' + request.POST.get('line-2') + ', ' + request.POST['city'] + ', ' + request.POST['state'] + ', ' + request.POST['country'] + ', ' + request.POST['postal-code']
         phone = request.POST['phone']
+        alt_phone = request.POST['alt_phone']
+
+        father = request.POST['father']
+        mother = request.POST['mother']
+
+        ssc = request.POST['ssc']
+        ssc_per = request.POST['ssc_per']
+        hsc = request.POST['hsc']
+        hsc_per = request.POST['hsc_per']
+        gujcet = request.POST['gujcet']
+        jee = request.POST['jee']
+
+        id_proof = request.FILES.get('id_proof')
         photo = request.FILES.get('photo')
         marks_10 = request.FILES.get('marks_10')
         marks_12 = request.FILES.get('marks_12')
-        Application.objects.create(name=name, dob=dob, address=address, phone=phone, student=user, photo=photo, marks_10=marks_10, marks_12=marks_12)
+        Application.objects.create(name=name, gender=gender, dob=dob, address=address, phone=phone, alt_phone=alt_phone, father=father, mother=mother, ssc=ssc, ssc_per=ssc_per, hsc=hsc, hsc_per=hsc_per, gujcet=gujcet, jee=jee, student=user, id_proof=id_proof, photo=photo, marks_10=marks_10, marks_12=marks_12)
         return redirect('Dashboard')
 
     return render(request, 'fill_application.html')
@@ -168,13 +217,10 @@ def FillApplication(request):
 @login_required
 def Dashboard(request):
     user = request.user
-    try:
-        app = Application.objects.get(student=user)
-    except Application.DoesNotExist:
-        return redirect('FillApplication')
+    app = Application.objects.get(student=user)
+    notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)
     
-    notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)    
-    context = {'user' : user, 'application' : app, 'notifications' : notification}
+    context = {'application' : app, 'notifications' : notification}
 
     return render(request, 'dashboard.html', context=context)
     
@@ -187,41 +233,142 @@ def Logout(request):
 @login_required
 def startTest(request):
     user = request.user
-    question = Question.objects.all()[0]
-
-    if request.method == 'GET':
-        applicant = ApplicantResponse.objects.filter(app_no__user = user).exists()
-
-        if not applicant: #No such object is found / DoesNotExist  ( Empty queryset )
-            currApplicant = ApplicantResponse(app_no__user = user, ques__qid = question.qid)
-            currApplicant.save()
-        else:
-            currApplicant = ApplicantResponse.objects.get(app_no__user = user)
-            #Test if end test time stamp is present, also continue test if already started
+    try:
+        user_application = Application.objects.get(student=user)
+    except Application.DoesNotExist:
+        messages.error(request, "The registration period is over! You are not eligible to give test.")
+        return redirect('Login')
     
-    return render(request, 'questions.html', {'question':question})
+    try:
+        test = Test.objects.get(app_no=user_application)
+        if test.test_end is not None:
+            messages.success(request, "Your test has already ended! You can now view your result")
+            return redirect('Dashboard')
+    except Test.DoesNotExist:
+        pass
+    
+    if 'start' in request.GET:
+        try:
+            test = Test.objects.get(app_no=user_application)
+        except Test.DoesNotExist:
+            test = Test.objects.create(app_no=user_application, test_start=timezone.now())
+        return redirect(reverse('Next_Question', args=(1,)))
 
-@login_required
+    
+    return render(request,'instructions.html')
+
+
 def nextQuestion(request, question_id):
-    user = request.user
-    question = Question.objects.get(qid = question_id)
-    user_response = ApplicantResponse.objects.filter(app_no__user = user, ques__qid = question_id)
+    if request.user.is_authenticated:
+        user = request.user
+        question = Question.objects.get(qid = question_id)
+        qCount = Question.objects.all().count()
+        options = [question.op1, question.op2,question.op3,question.op4]
+        user_application = Application.objects.get(student=user)
+        test = Test.objects.get(app_no=user_application)
+        if test.test_end is not None:
+            messages.success(request, "Your test has already ended! You can now view your result")
+            return redirect('Dashboard')
 
-    if request.method =='POST':
+        time_left = test.test_start + timedelta(minutes=5) - timezone.now()
+        hours, remainder = divmod(time_left.total_seconds(), 3600)
+        minutes, seconds = divmod(remainder, 60)
+    else:
+        return redirect('StartTest')
+
+    try:
+        user_response = ApplicantResponse.objects.get(app_no = user_application, ques = question)
+    except ApplicantResponse.DoesNotExist:
+        user_response = ApplicantResponse.objects.create(app_no = user_application, ques = question)
+
+    if request.method =='POST':    
+        if 'clear' in request.POST:
+            user_response.response = ""
+            user_response.save()
+            return redirect(reverse('Next_Question', args=(question.qid,)))
+           
         user_curr_ans = request.POST.get('answer')
-
         if user_response is not None:
             user_response.response = user_curr_ans
+            user_response.save()
         else:
             user_response = ApplicantResponse.objects.create(app_no__user = user, ques__qid = question_id, response = user_curr_ans)
-        
-        user_response.save()
 
-        if question_id < len(Question.objects.all()):
-            next_question_id = Question.objects.filter(qid__gt=question_id).first().qid
-            next_question = Question.objects.get(qid=next_question_id)
-            #you may write logic for last question to change next button to submit button
-            return render(request, 'question.html', {'question': next_question})
+        if 'end' in request.POST:
+            return redirect('EndTest')
         
-    return render(request, 'questions.html', {'question':question, 'response':user_response.response})
+        if 'submit' in request.POST:
+            if(question_id==Question.objects.count()):
+                messages.success(request,'You have answered all the question. Please review your answers and submit')
+                return redirect(reverse('Next_Question', args=(1,)))
+            next_question = Question.objects.get(qid=question_id+1)
+            options = [next_question.op1, next_question.op2,next_question.op3,next_question.op4]
+            return redirect(reverse('Next_Question', args=(next_question.qid,)))
+            
+    context = {
+                'question': question, 
+                'options': options,
+                'response': user_response.response, 
+                'iterateover': range(1,5), 
+                'count': qCount,
+                'countIterable': range(1,qCount+1),
+                'hours': hours,
+                'minutes': minutes,
+                'seconds': seconds,    
+            }
     
+    return render(request, 'questions.html', context=context)
+
+def EndTest(request):
+    if request.user.is_authenticated:
+        user = request.user
+        user_application = Application.objects.get(student=user)
+        responses = ApplicantResponse.objects.filter(app_no=user_application)
+        test = Test.objects.get(app_no=user_application)
+    else:
+        return redirect('StartTest')
+
+    test.test_end=timezone.now()
+
+    total = Question.objects.count()
+    score = 0
+    for i in responses:
+        question = i.ques
+        if question.ans==i.response:
+            score+=1
+    test.score=score
+    test.save()
+
+    context = {'score':score, 'total': total}
+    return render(request, 'result.html', context=context)
+
+@login_required
+def Result(request):
+    user = request.user
+    app = Application.objects.get(student=user)
+    test = Test.objects.get(app_no=app)
+    total = Question.objects.count()
+    score = test.score
+    context = {'total':total, 'score':score}
+
+    return render(request, 'result.html', context=context)
+
+
+# @login_required
+# def Admin(request):
+#     return render(request, 'administration.html')
+
+# @login_required
+# def ViewApplication(request):
+#     apps = Application.objects.filter()
+#     context = {'apps': apps}
+#     return render(request, 'view_applications.html', context=context)
+
+# @login_required
+# def Profile(request, email):
+#     user = User.objects.get(username=email)
+#     app = Application.objects.get(student=user)
+#     notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)
+    
+#     context = {'application' : app, 'notifications' : notification}
+#     return render(request, 'profile.html', context=context)

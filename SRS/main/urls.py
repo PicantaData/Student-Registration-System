@@ -12,7 +12,13 @@ urlpatterns = [
     path('fill_application/', views.FillApplication, name='FillApplication'),
     path('dashboard/', views.Dashboard, name='Dashboard'),
     path('test/start', views.startTest, name='StartTest'),
-    path('test/<int:qid>', views.nextQuestion, name='Next_Question'),
+    path('test/<int:question_id>', views.nextQuestion, name='Next_Question'),
+    path('test/endtest/', views.EndTest, name='EndTest'),
+    path('test/result', views.Result, name='Result'),
+    path('staff/define-test-window', views.populateTest, name='populateTest'),
+    # path('administration', views.Admin, name='Admin'),
+    # path('viewapplications/', views.ViewApplication, name='ViewApplications'),
+    # path('profile/<str:email>/', views.Profile, name='Profile')
 ]
 
 if settings.DEBUG:

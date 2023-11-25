@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for app in apps %}
+    {{app.student}}
+    <ul>
+        <li>{{app.name}} {{app.get_app_status_display}} <a href="{% url 'Profile' app %}">View Profile</a></li>
+    </ul>
+    {% endfor %}
+</body>
+</html>

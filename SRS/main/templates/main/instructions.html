@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Instructions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            /* background-image: url("pic.png");
+            background-size: cover; */
+            background-color: rgb(126, 176, 220);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            overflow: hidden;
+        }
+
+        .card {
+            width: 80%;
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 4px solid #000000;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            padding-top: 5%;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.5;
+            color: #333;
+            text-align: left;
+            max-width: 600px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            border: 2px;
+            border-radius: 5px;
+            margin-top: 20px;
+            cursor: not-allowed;
+            background-color: #ccc;
+            color: #ffffff;
+            transition: background-color 0.3s;
+        }
+
+        button.enabled {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: #ffffff;
+        }
+
+        button:hover {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        button.enabled:hover {
+            background-color: #1967d2;
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: #1967d2;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Test Instructions </h1>
+        <p>
+            <strong>Read the instructions carefully:</strong>
+            <br>
+            &rarr; The test format consists of multiple-choice questions (MCQs).
+            <br>
+            &rarr; Take note of the allocated test time.
+            <br>
+            &rarr; Click the checkbox below to enable the "Start Test" button.
+            <br>
+        </p>
+        <div>
+            <input style="cursor: pointer;" type="checkbox" id="enableCheckbox" onchange="enableStartTestButton()">
+            <label for="enableCheckbox">Enable Start Test</label>
+        </div>
+        <div>
+            <form action="{% url 'StartTest' %}">
+                <button id="startTestButton" name="start" disabled>Start Test</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function enableStartTestButton() {
+            var checkbox = document.getElementById("enableCheckbox");
+            var startTestButton = document.getElementById("startTestButton");
+
+            if (checkbox.checked) {
+                startTestButton.classList.add("enabled");
+                startTestButton.removeAttribute("disabled");
+                // startTestButton.setAttribute("disabled", "disabled");
+            } else {
+                startTestButton.classList.remove("enabled");
+                // startTestButton.setAttribute("disabled", "disabled");
+            }
+        }
+    </script>
+</body>
+</html>

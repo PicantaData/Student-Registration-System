@@ -944,7 +944,7 @@ section {
 # Testimonials
 --------------------------------------------------------------*/
 .testimonials {
-  padding: 80px 0;
+  padding: 10px 0;
   background: url("../images/cta-bg.jpg") no-repeat;
   background-position: center center;
   background-size: cover;
@@ -958,7 +958,7 @@ section {
   right: 0;
   top: 0;
   bottom: 0;
-  background: rgba(11, 41, 55, 0.9);
+  background: rgba(4, 33, 69, 0.9);
 }
 
 .testimonials .section-header {
@@ -1041,6 +1041,7 @@ section {
     width: 80%;
   }
 }
+
 
 /*--------------------------------------------------------------
 # Team

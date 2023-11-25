@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Quiz Page</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .navbar-brand,
+        .navbar-nav .nav-link {
+            color: #ffffff;
+        }
+        .navbar-toggler-icon {
+            background-color: #ffffff;
+        }
+        .question-container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .question {
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+        .question-nav {
+            background-color: #005cbd;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            color: #ffffff;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .question-nav h5 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .question-list {
+
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            /* overflow-x: scroll; */
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .question-list-item {
+            margin-left: 0;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .question-list-item a {
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px ;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            background-color: #3597ff;
+            display: block;
+        }
+        .question-list-item a:hover {
+            background-color: #0056b3;
+        }
+
+        .timer-container {
+            background-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    
+<!-- Navigation Panel -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <a class="navbar-brand" href="#">Quiz App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <form action="{% url 'Next_Question' question.qid %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit" name="end" onclick="return confirm('Are you Sure you want to submit the test?')">End Test</button>
+            </form>
+        </ul>
+    </div>
+</nav>
+<div class="timer-container d-flex justify-content-end px-4 " id="timer">
+    <div class="px-3 py-2  text-white rounded-4 timer-container fs-3">
+        Time: <span class="hours">1</span>:<span class="minutes">00</span>:<span class="seconds">00</span>
+    </div>
+</div>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- MCQ Question Container -->
+<div class="question-container">
+    <div class="question active" id="question1">
+        <div class="question-nav">
+            <h5 class="py-4">Question Navigation</h5>
+            <ul class="px-0 d-flex justify-content-center list-unstyled question-list">
+                {% for counter in countIterable %}
+                <li class="question-list-item">
+                    <a href="{% url 'Next_Question' counter %}">{{counter}}</a>
+                </li>
+                {% endfor %}
+                <!-- Add more list items for additional questions -->
+            </ul>
+        </div>
+
+        <div class="question-box">
+            <h1>JEE Entrance Exam Test</h1>
+            <form action="{% url 'Next_Question' question.qid %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- Question heading -->
+                <h5 class="text-black">Question {{question.qid}}</h5>
+                <p>{{question.ques}}</p>
+
+                <!-- Options -->
+                {% for option in options %}
+                    {% if forloop.counter|slugify == response|slugify %}
+                        <input type="radio" name="answer" value="{{forloop.counter}}" checked> {{forloop.counter}}
+                        {{option}}
+                        <br>
+                    {% else %}
+                        <input type="radio" name="answer" value="{{forloop.counter}}"> {{forloop.counter}} {{option}}
+                        <br>
+                    {% endif %}
+                {% endfor %}
+                <br>
+
+                <!-- Submit, clear response, next buttons -->
+                <div class="d-flex justify-content-center">
+                    <button type="submit" name="clear" class="btn btn-primary btn-md rounded-4 mx-3">Clear Response</button>
+                    <button type="submit" name="submit" class="btn btn-primary btn-md rounded-4 mx-3">Next</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Set the deadline time for the timer
+    var deadline = new Date(Date.parse(new Date()) + (parseInt('{{hours}}')*3600 + parseInt('{{minutes}}')*60 + parseInt('{{seconds}}')) * 1000); // 1 Hour
+
+    function getTimeRemaining(endtime) {
+        var total = Date.parse(endtime) - Date.parse(new Date());
+        var seconds = Math.floor((total / 1000) % 60);
+        var minutes = Math.floor((total / 1000 / 60) % 60);
+        var hours = Math.floor((total / 1000 / 60 / 60) % 24);
+        return {
+            'total': total,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+    function initializeClock(id, endtime) {
+        var clock = document.getElementById(id);
+        var hoursSpan = clock.querySelector('.hours');
+        var minutesSpan = clock.querySelector('.minutes');
+        var secondsSpan = clock.querySelector('.seconds');
+
+        function updateClock() {
+            var t = getTimeRemaining(endtime);
+
+            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+            if (t.total <= 0) {
+                // Display a message or take action when the timer reaches zero
+                alert("Time's up!");
+                clearInterval(timeinterval);
+                window.location.href = "{% url 'EndTest' %}"
+            }
+        }
+
+        updateClock(); // run function once at first to avoid delay
+        var timeinterval = setInterval(updateClock, 1000);
+    }
+
+    initializeClock('timer', deadline);
+</script>
+
+<!-- Bootstrap JS and dependencies (Popper.js and jQuery) -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>
