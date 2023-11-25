@@ -16,7 +16,8 @@ class NotificationAdmin(admin.ModelAdmin):
         # Call the original save_model method to save the model
             super().save_model(request, obj, form, change)  
 
-admin.site.register(Application)
-admin.site.register(Notification)
-admin.site.register(Question)
+admin.site.register(Application, ApplicationAdmin)
+admin.site.register(Notification, NotificationAdmin)
 admin.site.register(ApplicantResponse)
+admin.site.register(Question)
+admin.site.register(Test)

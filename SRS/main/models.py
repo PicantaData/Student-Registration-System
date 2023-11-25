@@ -3,25 +3,49 @@ from django.contrib.auth.models import User
 import string, secrets
 from django.core.exceptions import ValidationError
 from django.contrib import messages
+import datetime
 
 def gen_app_no():
     characters = string.ascii_letters + string.digits
     application_number = ''.join(secrets.choice(characters) for _ in range(12))
     return application_number
 
+def file_upload(instance,filename):
+    return '{0}/{1}'.format(instance.app_no, filename)
+
 class Application(models.Model):
     STATUS = [('P','Pending'), ('A','Accepted'), ('R','Rejected')]
     app_no = models.CharField(max_length=12, null=False, default=gen_app_no)
-    name = models.CharField(max_length=100, null=False)
     student = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=13, blank=False, null=False)
-    dob = models.DateField(blank=True, null=False)
-    address = models.TextField(blank=True)
     app_status = models.CharField(choices=STATUS, default='P', max_length=1)
-    photo = models.ImageField(upload_to='photo/', max_length=250, null=False, default=None)
-    marks_10 = models.FileField(upload_to='10marks/', max_length=250, null=False, default=None)
-    marks_12 = models.FileField(upload_to='12marks/', max_length=250, null=False, default=None)
-    result = models.JSONField(null=True)
+    # verified_by = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    GENDER = [('M','Male'), ('F','Female'), ('P','Prefer Not To Say')]
+    name = models.CharField(max_length=100, null=False)
+    gender = models.CharField(choices=GENDER, max_length=1)
+    dob = models.DateField(blank=True, null=False)
+
+    father = models.CharField(max_length=100, null=False)
+    mother = models.CharField(max_length=100, null=False)
+
+    phone = models.CharField(max_length=13, blank=False, null=False)
+    alt_phone = models.CharField(max_length=13, blank=False, null=False)
+    address = models.TextField(blank=True)
+
+    ssc = models.CharField(max_length=100, null=False)
+    ssc_per = models.CharField(max_length=10, null=False)
+    hsc = models.CharField(max_length=100, null=False)
+    hsc_per = models.CharField(max_length=10, null=False)
+    gujcet = models.CharField(max_length=10, null=False)
+    jee = models.CharField(max_length=100, null=False)
+    
+    id_proof = models.FileField(upload_to=file_upload,max_length=250, null=False, default=None)
+    photo = models.ImageField(upload_to=file_upload, max_length=250, null=False, default=None)
+    marks_10 = models.FileField(upload_to=file_upload, max_length=250, null=False, default=None)
+    marks_12 = models.FileField(upload_to=file_upload, max_length=250, null=False, default=None)
+    
+    test_start = models.DateTimeField(null=True)
+    test_end = models.DateTimeField(null=True)
 
     def __str__(self):
         return self.student.username
@@ -62,16 +86,25 @@ class Question(models.Model):
     OPTIONS = [('1','op1'), ('2','op2'), ('3', 'op3'), ('4','op4')]
     ans = models.TextField(choices=OPTIONS, null=False)
 
+    def __str__(self):
+        return str(self.qid) + ": " + self.ques
+
 class ApplicantResponse(models.Model):
     OPTIONS = [('1','op1'), ('2','op2'), ('3', 'op3'), ('4','op4')]
     app_no = models.ForeignKey(Application, on_delete=models.CASCADE)
     ques = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
-    response = models.CharField(choices=OPTIONS, null=True, max_length=1)
+    response = models.CharField(choices=OPTIONS, null=True, blank=True, max_length=1)
     class Meta:
         unique_together = ['app_no', 'ques']
 
     def __str__(self):
         return str(self.app_no) + ' ' + str(self.ques)
     
-# class Test(models.Model):
-#     student = models.OneToOneField(Application, on_delete=models.CASCADE)
+class Test(models.Model):
+    app_no = models.ForeignKey(Application, on_delete=models.CASCADE)
+    test_start = models.DateTimeField(null=True)
+    test_end = models.DateTimeField(null=True)
+    score = models.IntegerField(default=0, null=False)
+
+    def __str__(self):
+        return str(self.app_no)

@@ -95,6 +95,48 @@ body {
     background-color: #0056b3;
 }
 
+.submit-button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007BFF; /* Green color, you can change it */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    background-color: #0056b3; /* Darker green color on hover, you can change it */
+}
+
+
+.header-buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Adjust the styles as needed */
+.header-button {
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: #007bff; /* Example color, you can change it */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#logoutButton {
+    /* Add specific styles for the Logout button */
+    background-color: #dc3545; /* Example color, you can change it */
+}
+
+
 /* Responsive styling for smaller screens */
 @media (max-width: 600px) {
     .form-pair label,
