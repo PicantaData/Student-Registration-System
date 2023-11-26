@@ -1,6 +1,12 @@
 import re    
 from django.core.exceptions import ValidationError
-# from django.utils.translation import ugettext as _    
+from django.contrib.auth.password_validation import validate_password
+
+def validate_user_password(password):
+    try:
+        validate_password(password)
+    except ValidationError as e:
+        raise ValidationError({'password': e.messages})
 
 class MinimumLengthValidator:
     def __init__(self, min_length=8):

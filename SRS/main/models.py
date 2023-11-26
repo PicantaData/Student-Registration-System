@@ -1,9 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 import string, secrets
-from django.core.exceptions import ValidationError
-from django.contrib import messages
-import datetime
 
 def gen_app_no():
     characters = string.ascii_letters + string.digits
@@ -11,7 +8,7 @@ def gen_app_no():
     return application_number
 
 def file_upload(instance,filename):
-    return '{0}/{1}'.format(instance.app_no, filename)
+    return 'user/{0}/{1}'.format(instance.app_no, filename)
 
 class Application(models.Model):
     STATUS = [('P','Pending'), ('A','Accepted'), ('R','Rejected')]
@@ -44,8 +41,10 @@ class Application(models.Model):
     marks_10 = models.FileField(upload_to=file_upload, max_length=250, null=False, default=None)
     marks_12 = models.FileField(upload_to=file_upload, max_length=250, null=False, default=None)
     
-    test_start = models.DateTimeField(null=True)
-    test_end = models.DateTimeField(null=True)
+    test_start = models.DateTimeField(null=True, blank=True)
+    test_end = models.DateTimeField(null=True, blank=True)
+    order_id = models.CharField(max_length=100,null=True,blank=True)
+    payment_id = models.CharField(max_length=100,null=True,blank=True)
 
     def __str__(self):
         return self.student.username
@@ -92,7 +91,7 @@ class Question(models.Model):
 class ApplicantResponse(models.Model):
     OPTIONS = [('1','op1'), ('2','op2'), ('3', 'op3'), ('4','op4')]
     app_no = models.ForeignKey(Application, on_delete=models.CASCADE)
-    ques = models.ForeignKey(Question, on_delete=models.DO_NOTHING)
+    ques = models.ForeignKey(Question, on_delete=models.CASCADE) #If question is deleted, recalculate score?
     response = models.CharField(choices=OPTIONS, null=True, blank=True, max_length=1)
     class Meta:
         unique_together = ['app_no', 'ques']
@@ -108,3 +107,10 @@ class Test(models.Model):
 
     def __str__(self):
         return str(self.app_no)
+    
+# class TestWindow(models.Model):
+#     start = models.DateTimeField()
+#     end = models.DateTimeField()
+
+#     def __str__(self):
+#         return 'Start: ' + self.start + ' End: ' + self.end

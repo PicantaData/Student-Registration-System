@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Form</title>
+    <title>Fill Application</title>
     <link rel="stylesheet" href="{% static 'css/style_fill_application.css' %}">
 
 
@@ -17,11 +17,11 @@
         <div class="forms-container">
             <div class="header-buttons">
 
-                <div><a href="{% url 'Home' %}"><ion-icon name="home-outline" size="large" style="color: black;"></ion-icon></a></div>
-                <a href="{% url 'Logout' %}"><button class="header-button" id="logoutButton">Logout</button></a>
+                <div><a href="{% url 'main:Home' %}"><ion-icon name="home-outline" size="large" style="color: black;"></ion-icon></a></div>
+                <a href="{% url 'main:Logout' %}"><button class="header-button" id="logoutButton">Logout</button></a>
             
             </div>
-            <form action="{% url 'FillApplication' %}" class="application-form-personal" method="post" enctype="multipart/form-data">
+            <form action="{% url 'main:FillApplication' %}" class="application-form-personal" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <!-- Home and Logout buttons -->
 
@@ -67,22 +67,6 @@
                                 <input type="radio" name="gender" id="female" value="F" /> Female
                                 <input type="radio" name="gender" id="prefer-not-say" value="P" /> Prefer Not To Say
                             </span>
-
-                            <script>
-                                // Get all radio buttons with the name "gender"
-                                var radioButtons = document.querySelectorAll('input[name="gender"]');
-
-                                // Add an event listener to each radio button
-                                radioButtons.forEach(function (radioButton) {
-                                    radioButton.addEventListener('change', function () {
-                                        // Set the value to "true" when a radio button is selected
-                                        radioButtons.forEach(function (rb) {
-                                            rb.value = "false";
-                                        });
-                                        this.value = "true";
-                                    });
-                                });
-                            </script>
                         </div>
                         <br>
                         <h3 id="birthdate">Date of Birth</h3>

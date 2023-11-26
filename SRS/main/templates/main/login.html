@@ -27,7 +27,7 @@
             <div class="form-content">
                 <div class="container-sm">
                     <div class="row">
-                        <div class="col-4"><a href="{% url 'Home' %}"><ion-icon name="home-outline" size="large"></ion-icon></a></div>
+                        <div class="col-4"><a href="{% url 'main:Home' %}"><ion-icon name="home-outline" size="large"></ion-icon></a></div>
                         <div class="col-3"><p style="font-size: 28px;font-weight: 600;color: #232836;text-align: center;">Login</p></div>
                     </div>
                 </div>
@@ -41,14 +41,14 @@
                         <i class='bx bx-hide eye-icon'></i>
                     </div>
                     <div class="form-link">
-                        <span><a href="{% url 'Forget' %}" style="color:#111;">Forgot Password?</a></span>
+                        <span><a href="{% url 'main:Forget' %}" style="color:#111;">Forgot Password?</a></span>
                     </div>
                     <div class="field button-field">
                         <button type="submit">Login</button>
                     </div>
                 </form>
                 <div class="form-link">
-                    <span>Don't have an account? <a href="{% url 'Register' %}" class="" style="color:#111;">Signup</a></span>
+                    <span>Don't have an account? <a href="{% url 'main:Register' %}" class="" style="color:#111;">Signup</a></span>
                 </div>
             </div>
         </div>

@@ -27,11 +27,11 @@
             <div class="form-content">
                 <div class="container-sm">
                 <div class="row">
-                    <div class="col-4"><a href="{% url 'Home' %}"><ion-icon name="home-outline" size="large"></ion-icon></a></div>
+                    <div class="col-4"><a href="{% url 'main:Home' %}"><ion-icon name="home-outline" size="large"></ion-icon></a></div>
                     <div class="col-3"><p style="font-size: 28px;font-weight: 600;color: #232836;text-align: center;">Signup</p></div>
                 </div>
                 </div>
-                <form action="{% url 'Register' %}" method="post">
+                <form action="{% url 'main:Register' %}" method="post">
                     {% csrf_token %}
                     <div class="field input-field">
                         <input type="email" placeholder="Email" class="input" id="signup-email" name="signup-email" required>
@@ -51,7 +51,7 @@
                 </form>
 
                 <div class="form-link">
-                    <span>Already have an account? <a href="{% url 'Login' %}" class="" style="color:#111;">Login</a></span>
+                    <span>Already have an account? <a href="{% url 'main:Login' %}" class="" style="color:#111;">Login</a></span>
                 </div>
             </div>
         </div>

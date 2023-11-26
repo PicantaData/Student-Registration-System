@@ -64,13 +64,13 @@
 
             <!-- Test -->
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'StartTest' %}">
+              <a class="nav-link" href="{% url 'main:StartTest' %}">
                   <span>Test</span>
               </a>
             </li>
             <!-- Home -->
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'Home' %}">
+                <a class="nav-link" href="{% url 'main:Home' %}">
                     <span>Home</span>
                 </a>
             </li>
@@ -88,17 +88,17 @@
             </li>
             <!-- Result -->
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'Dashboard' %}">
+                <a class="nav-link" href="{% url 'main:Result' %}">
                   <span>Result</span></a>
             </li>
             <!-- Nav Item - Changepassword -->
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'Forget' %}">
+                <a class="nav-link" href="{% url 'main:Forget' %}">
                   <span>Change Password</span></a>
             </li>
 
             <li class="nav-item active">
-              <a class="nav-link" href="{% url 'Logout' %}">
+              <a class="nav-link" href="{% url 'main:Logout' %}">
                 <span>Logout</span></a>
             </li>
 
@@ -173,7 +173,7 @@
 
                       <div class="card-body" style="height: 50%; width: 100%;">
                         <div class="d-flex flex-column align-items-center text-center">
-                          <img src="{{application.photo.url}}" alt="Admin" style="width: 180px; height: 220px;">
+                          <img src="https://srs-it314.s3.ap-south-1.amazonaws.com/{{application.photo}}" alt="Admin" style="width: 180px; height: 220px;">
                         </div>
                       </div>
                       
@@ -248,14 +248,14 @@
                           <div class="col-sm-3">
                             <h6 class="mb-0">12<sup>th</sup> Marksheet</h6>
                           </div>
-                          <div class="col-sm-9 text-secondary"><a href="{{application.marks_12.url}}">View 12<sup>th</sup> Marksheet</a></div>
+                          <div class="col-sm-9 text-secondary"><a href="https://srs-it314.s3.ap-south-1.amazonaws.com/{{application.marks_12}}">View 12<sup>th</sup> Marksheet</a></div>
                         </div>
                         <hr>
                         <div class="row">
                           <div class="col-sm-3">
                             <h6 class="mb-0">10<sup>th</sup> Marksheet</h6>
                           </div>
-                          <div class="col-sm-9 text-secondary"><a href="{{application.marks_10.url}}">View 10<sup>th</sup> Marksheet</a></div>
+                          <div class="col-sm-9 text-secondary"><a href="https://srs-it314.s3.ap-south-1.amazonaws.com/{{application.marks_10}}">View 10<sup>th</sup> Marksheet</a></div>
                         </div>
                         <hr>
                         <div class="row">
