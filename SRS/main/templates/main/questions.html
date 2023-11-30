@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Quiz Page</title>
+    <title>Questions</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
@@ -101,7 +101,7 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
-            <form action="{% url 'Next_Question' question.qid %}" method="POST" enctype="multipart/form-data">
+            <form action="{% url 'main:Next_Question' question.qid %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 <button class="btn btn-danger" type="submit" name="end" onclick="return confirm('Are you Sure you want to submit the test?')">End Test</button>
             </form>
@@ -130,7 +130,7 @@
             <ul class="px-0 d-flex justify-content-center list-unstyled question-list">
                 {% for counter in countIterable %}
                 <li class="question-list-item">
-                    <a href="{% url 'Next_Question' counter %}">{{counter}}</a>
+                    <a href="{% url 'main:Next_Question' counter %}">{{counter}}</a>
                 </li>
                 {% endfor %}
                 <!-- Add more list items for additional questions -->
@@ -138,8 +138,8 @@
         </div>
 
         <div class="question-box">
-            <h1>JEE Entrance Exam Test</h1>
-            <form action="{% url 'Next_Question' question.qid %}" method="POST" enctype="multipart/form-data">
+            <h1>Online Assessment Test</h1>
+            <form action="{% url 'main:Next_Question' question.qid %}" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
                 <!-- Question heading -->
@@ -203,7 +203,7 @@
                 // Display a message or take action when the timer reaches zero
                 alert("Time's up!");
                 clearInterval(timeinterval);
-                window.location.href = "{% url 'EndTest' %}"
+                window.location.href = "{% url 'main:EndTest' %}"
             }
         }
 

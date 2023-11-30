@@ -1,87 +1,235 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Endpage/Result</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center; /* Center content horizontally */
-            align-items: center; /* Center content vertically */
-            height: 100vh;
-            margin: 0;
-            background-color: rgb(126, 176, 220);
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            overflow: hidden;
-        }
+      body {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        /* display: flex;
+            justify-content: center;
+            align-items: center;  */
+        height: 100vh;
+        margin: 0;
+        background-color: rgb(126, 176, 220);
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        overflow: hidden;
+      }
 
+      .sidebar {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+      }
+
+      .sidebar a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 16px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .sidebar a:hover {
+        color: #f1f1f1;
+      }
+
+      .sidebar .closebtn {
+        position: absolute;
+        top: 0;
+        right: 0;
+        font-size: 36px;
+        margin-left: 50px;
+      }
+
+      .openbtn {
+        font-size: 20px;
+        cursor: pointer;
+        background-color: #111;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+      }
+
+      .openbtn:hover {
+        background-color: #444;
+      }
+
+      #main {
+        transition: margin-left .5s;
+        padding: 16px;
+      }
+
+      /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+      @media screen and (max-height: 450px) {
         .sidebar {
-            background-color: #333;
-            color: #fff;
-            padding: 50px;
-            text-align: center;
-            width: 120px; /* Adjusted width for the sidebar */
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+          padding-top: 15px;
         }
 
         .sidebar a {
-            font-size: 16px;
-            color: #fff;
-            text-decoration: none;
-            margin: 30px 0;
+          font-size: 18px;
         }
+      }
 
-        .card {
-            width: calc(100% - 140px); /* Adjusted width to accommodate the sidebar */
-            max-width: 600px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 6px solid #000000;
-            border-radius: 10px;
-            padding: 30px; /* Adjusted padding for the card */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin-top: 50px;
-            text-align: center; /* Center text in the card */
-        }
+      /*--------------------- Result Card---------- */
+      .card {
+        width: calc(100% - 140px);
+        max-width: 500px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        height: 250px;
+      }
 
-        h1 {
-            font-size: 28px; /* Adjusted font size for the heading */
+      /* h1 {
+            font-size: 28px; 
             margin-bottom: 20px;
             color: #333;
+        } */
+      #scoreDisplay {
+        display: inline-block;
+        margin-right: 10px;
+      }
+
+      #additionalInfo {
+        width: 80px;
+      }
+
+      /* Progress Bar */
+      @keyframes progress {
+        0% {
+          --percentage: 0;
         }
 
-        #scoreDisplay {
-            display: inline-block;
-            margin-right: 10px;
+        100% {
+          --percentage: var(--value);
         }
+      }
 
-        #additionalInfo {
-            width: 80px;
-        }
+      /* @property --percentage {
+        syntax: '<number>';
+        inherits: true;
+        initial-value: 0;
+      } */
+
+      [role="progressbar"] {
+        --percentage: var(--value);
+        --primary: #369;
+        --secondary: #adf;
+        --size: 11.2vw;
+        animation: progress 2s 0.5s forwards;
+        width: var(--size);
+        aspect-ratio: 1;
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+      }
+
+      [role="progressbar"]::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: conic-gradient(var(--primary) calc(var(--percentage) * 1%), var(--secondary) 0);
+        mask: radial-gradient(white 55%, transparent 0);
+        mask-mode: alpha;
+        -webkit-mask: radial-gradient(#0000 55%, #000 0);
+        -webkit-mask-mode: alpha;
+      }
+
+      [role="progressbar"]::after {
+        counter-reset: percentage var(--value);
+        content: counter(percentage) '%';
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: calc(var(--size) / 5);
+        color: var(--primary);
+      }
+      /* When Screen becomes small*/
+      @media (max-width: 544px){
+          .card{
+            display: none;
+          }
+      }
     </style>
-</head>
-
-<body>
-    <div class="sidebar">
-        <a href="{% url 'Home' %}">Home</a>
-        <a href="{% url 'Dashboard' %}">Dashboard</a>
-        <a href="{% url 'Logout' %}">Logout</a>
+  </head>
+  <body>
+    <div id="mySidebar" class="sidebar">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+      <div class="logo_image_daiict" style="margin-bottom: 5%;display: flex;justify-content: center;align-items: center;flex-direction: column;" href="index.html">
+        <div class="daiictimg">
+          <img class="daiict" target="_blank" src="{% static 'images/dalogo.png' %}">
+        </div>
+        <div>
+          <a style="color:white;text-decoration: none;font-size: 14px;font-weight: 500;" href="https://www.daiict.ac.in/" target="_blank" class="sidebar-brand-text">DA-IICT </a>
+        </div>
+      </div>
+      <a href="{% url 'main:Home' %}">Home</a>
+      <a href="{% url 'main:Dashboard' %}">Dashboard</a>
+      <a href="{% url 'main:Logout' %}">Logout</a>
     </div>
-    <div class="card">
-        <h1 style="margin-top: auto;">Result </h1>
-        <p id="scoreDisplay">Score/Total: {{score}}/{{total}}</p>
-
+    <div id="main" style="margin-left: 0px;">
+      <button class="openbtn" onclick="openNav()">☰</button>
+      <div style="display: flex;justify-content: center;align-items: center;flex-direction: column;">
+        <div class="card" id="card_content">
+          <div id="result-card-title" style="background-color: #98AFC7;">
+            <h1 style="margin-top: auto;font-weight: 500;font-size: 3vw;">Result </h1>
+            <div></div>
+          </div>
+          <div id="result-card-inner" style="display: flex;flex-direction: row;justify-content: space-between;">
+            <div id="progress-bar" style="width: 50%; height: auto;"></div>
+            <div id="result-card-score-text" style="width: 50%;height: auto;">
+              <h1 style="font-weight: 100;margin: 0px;font-size: 2vw;">Your Score:</h1>
+              <p style="font-weight: 500; font-size: 2.4vw;color: #228b22;">{{score}} Out of {{total}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    </div>
+    <script>
+      function openNav() {
+        document.getElementById("mySidebar").style.width = "250px";
+        document.getElementById("main").style.marginLeft = "250px";
+        var screenWidth = screen.width;
+        if(screen.width < 545){
+          document.getElementById("card_content").style.display = "none";
+        }
+      }
+      function closeNav() {
+        document.getElementById("mySidebar").style.width = "0";
+        document.getElementById("main").style.marginLeft = "0";
+        /* document.getElementsByClassName("card").style.display = "block"; */
+        document.getElementById("card_content").style.display = "block";
 
-</body>
+      }
+      var score = '{{score}}';
+      var total = '{{total}}';
+      var perc = (score / total) * 100;
+      
+      var str = '<div role="progressbar" id="progressbar_circle" aria-valuenow='+perc+' aria-valuemin="0" aria-valuemax="100" style= --value:'+perc+'></div>';  
+      document.getElementById("progress-bar").innerHTML = str;
+    </script>
+  </body>
 </html>

@@ -33,7 +33,7 @@
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center justify-content-between">
 
-      <a href="{% url 'Home' %}" class="logo"><img src="{% static 'images/dalogo.png' %}" alt=""
+      <a href="{% url 'main:Home' %}" class="logo"><img src="{% static 'images/dalogo.png' %}" alt=""
           class="images-fluid"></a>
 
       <nav id="navbar" class="navbar">
@@ -44,10 +44,16 @@
           <li><a class="nav-link scrollto" href="#gallery">Gallery</a></li>
           <li><a class="nav-link scrollto" href="#contact">Contact</a></li>
           {% if not request.user.is_authenticated %}
-          <li><a class="nav-link scrollto" href="{% url 'Login' %}">Login</a></li>
+          <li><a class="nav-link scrollto" href="{% url 'main:Login' %}">Login</a></li>
           {% else %}
-          <li><a class="nav-link scrollto" href="{% url 'Dashboard' %}">Dashboard</a></li>
-          <li><a class="nav-link scrollto" href="{% url 'Logout' %}">Logout</a></li>
+            {% if flag == 'Application' %}
+            <li><a class="nav-link scrollto" href="{% url 'main:FillApplication' %}">Fill Application</a></li>
+            {% elif flag == 'Fees' %}
+            <li><a class="nav-link scrollto" href="{% url 'main:PayFees' %}">Pay Fees</a></li>
+            {% elif flag == 'Dashboard' %}
+            <li><a class="nav-link scrollto" href="{% url 'main:Dashboard' %}">Dashboard</a></li>
+            {% endif %}
+            <li><a class="nav-link scrollto" href="{% url 'main:Logout' %}">Logout</a></li>
           {% endif %}
         </ul>
         <i class="bi bi-list mobile-nav-toggle"></i>
@@ -78,7 +84,7 @@
             <img src="{% static 'images/da.jpg' %}" class="testimonial-img" alt="">
             <p>
               <i class="bx bxs-quote-alt-left quote-icon-left"></i>
-                {{noti.content}}
+                {{noti.content}} {{noti.time.time|date:'d-m-Y H:i'}}
               <i class="bx bxs-quote-alt-right quote-icon-right"></i>
             </p>
           </div>
@@ -354,7 +360,7 @@
           </div>
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form class="php-email-form" action="{% url 'Home' %}" method="post">
+            <form class="php-email-form" action="{% url 'main:Home' %}" method="post">
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6 form-group">
@@ -405,7 +411,7 @@
     </div>
   </footer><!-- End Footer -->
 
-  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  <!-- <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a> -->
 
   <script src="{% static 'js/others/purecounter_vanilla.js' %}"></script>
   <script src="{% static 'js/others/bootstrap.bundle.min.js' %}"></script>

@@ -211,12 +211,12 @@ figure {
     margin: 0 0 1rem
 }
 
-img {
+/* img {
     width: 70px;
     height: 70px;
     vertical-align: middle;
     border-style: none
-}
+} */
 
 svg {
     overflow: hidden;
@@ -589,12 +589,76 @@ pre code {
     margin-left: auto
 }
 
+@media (max-width: 290px){
+    .prof_img {
+        height: auto;
+        width: 100%;
+    }
+}
+
+@media (min-width: 291px){
+    .prof_img {
+        width: 180px;
+        height: 180px;
+    }
+}
+
 @media (min-width:576px) {
 
     .container,
     .container-sm {
-        max-width: 540px
+        max-width: 540px;
+
     }
+    .prof_img {
+        height: 180px;
+        width: 180px;
+
+}
+
+@media (max-width:576px) {
+    .sidebar-dark {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        /* top: 0;
+        left: 0; */
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    #sidebarToggleTop {
+        margin-left: 100px;
+    }
+
+}
+
+@media (max-width:768px) {
+    .sidebar-dark {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        /* top: 0;
+        left: 0; */
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    #sidebarToggleTop {
+        margin-left: 100px;
+    }
+    .daiict {
+        height: auto;
+        width: 100%
+    }
+    .logo_image_daiict {
+        margin-top: -60px;
+    }
+
 }
 
 @media (min-width:768px) {
@@ -602,8 +666,12 @@ pre code {
     .container,
     .container-md,
     .container-sm {
-        max-width: 720px
+        max-width: 720px;
     }
+    .prof_img {
+        height: auto;
+        width: 100%;
+    
 }
 
 @media (min-width:992px) {
@@ -614,6 +682,10 @@ pre code {
     .container-sm {
         max-width: 960px
     }
+    .prof_img {
+        height: auto;
+        width: 100%;
+    
 }
 
 @media (min-width:1200px) {
@@ -625,6 +697,10 @@ pre code {
     .container-xl {
         max-width: 1140px
     }
+    .prof_img {
+        width: 180px;
+        height: 180px;
+    
 }
 
 .row {
@@ -4632,8 +4708,36 @@ input[type=submit].btn-block {
         padding-right: 0;
         padding-left: 0
     }
+    .logo_image_daiict {
+        margin-top: 0px;
+    }
+    .sidebar-dark {
+        position: absolute;
+    }
+    .daiict {
+        height: auto;
+        width: 100%;
+    }
 }
 
+@media (max-width: 575px) {
+    .logo_image_daiict {
+        margin-top: 0px;
+    }
+    .sidebar-dark {
+        position: absolute;
+    }
+    .daiict {
+        height: auto;
+        width: 100%;
+    }
+}
+
+@media (max-width:768px) {
+    .sidebarToggleTop {
+        margin-left: 100px;
+    }
+}
 @media (min-width:576px) {
     .navbar-expand-sm {
         flex-flow: row nowrap;
@@ -4992,6 +5096,18 @@ input[type=submit].btn-block {
 .navbar-dark .navbar-text a:hover {
     color: #fff
 }
+@media screen and (max-width: 767px) {
+    #student-info-sd {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  @media screen and (min-width: 768px) {
+    #student-info-sd {
+      display: flex;
+      flex-direction: row;
+    }
+  }
 
 .card {
     position: relative;
@@ -12598,7 +12714,7 @@ form.user .btn-user {
 }
 
 footer.sticky-footer {
-    padding: 2rem 0;
+    padding: 2.5rem 0;
     flex-shrink: 0
 }
 
@@ -12616,6 +12732,7 @@ body.sidebar-toggled footer.sticky-footer {
     align-items: center;
     width: 100%;
     flex-flow: column;
+    padding: 10%;
 }
 @media (min-width:768px) {
     .daiict {
@@ -12627,6 +12744,11 @@ body.sidebar-toggled footer.sticky-footer {
 .daiict {
     height: auto; width: 100%; position: 0 0;
 }
-.student-profile-sm{
+.student-profile-sm {
     margin: 0 5%;
+}
+@media screen and (max-width: 767px) {
+    .daiict {
+        display: none;
+    }
 }

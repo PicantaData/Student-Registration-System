@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application Form</title>
+    <title>Fill Application</title>
     <link rel="stylesheet" href="{% static 'css/style_fill_application.css' %}">
 
 
@@ -17,11 +17,11 @@
         <div class="forms-container">
             <div class="header-buttons">
 
-                <div><a href="{% url 'Home' %}"><ion-icon name="home-outline" size="large" style="color: black;"></ion-icon></a></div>
-                <a href="{% url 'Logout' %}"><button class="header-button" id="logoutButton">Logout</button></a>
+                <div><a href="{% url 'main:Home' %}"><ion-icon name="home-outline" size="large" style="color: black;"></ion-icon></a></div>
+                <a href="{% url 'main:Logout' %}"><button class="header-button" id="logoutButton">Logout</button></a>
             
             </div>
-            <form action="{% url 'FillApplication' %}" class="application-form-personal" method="post" enctype="multipart/form-data">
+            <form action="{% url 'main:FillApplication' %}" class="application-form-personal" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <!-- Home and Logout buttons -->
 
@@ -42,13 +42,13 @@
                                     First Name
                                 </label>
                                 <input type="text" class="required-field-personal" id="fname" name="fname"
-                                    placeholder="Enter First Name" required/>
+                                    placeholder="Enter First Name" pattern="^\S*$" title="Spaces are not allowed" required/>
                             </span>
                             <span class="form-field" style="vertical-align:top">
                                 <label aria-hidden="false">
                                     Middle Name
                                 </label>
-                                <input type="text" id="mname" name="mname" placeholder="Enter Middle Name" required/>
+                                <input type="text" id="mname" name="mname" placeholder="Enter Middle Name" pattern="^\S*$" title="Spaces are not allowed" required/>
                             </span>
 
                             <span class="form-field" style="vertical-align:top">
@@ -56,7 +56,7 @@
                                     Last Name
                                 </label>
                                 <input type="text" class="required-field-personal" id="lname" name="lname"
-                                    placeholder="Enter Last Name" required/>
+                                    placeholder="Enter Last Name" pattern="^\S*$" title="Spaces are not allowed" required/>
                             </span>
                         </div>
                         <br>
@@ -67,22 +67,6 @@
                                 <input type="radio" name="gender" id="female" value="F" /> Female
                                 <input type="radio" name="gender" id="prefer-not-say" value="P" /> Prefer Not To Say
                             </span>
-
-                            <script>
-                                // Get all radio buttons with the name "gender"
-                                var radioButtons = document.querySelectorAll('input[name="gender"]');
-
-                                // Add an event listener to each radio button
-                                radioButtons.forEach(function (radioButton) {
-                                    radioButton.addEventListener('change', function () {
-                                        // Set the value to "true" when a radio button is selected
-                                        radioButtons.forEach(function (rb) {
-                                            rb.value = "false";
-                                        });
-                                        this.value = "true";
-                                    });
-                                });
-                            </script>
                         </div>
                         <br>
                         <h3 id="birthdate">Date of Birth</h3>
@@ -91,7 +75,7 @@
                                 <label aria-hidden="false">
                                     Birthdate
                                 </label>
-                                <input type="date" class="required-field" id="dob" name="dob" required/>
+                                <input type="date" class="required-field" id="dob" name="dob" pattern="^\S*$" title="Spaces are not allowed" required/>
                             </span>
 
                         </div>
@@ -105,7 +89,7 @@
                                         Phone number
                                     </label>
                                     <input type="text" class="required-field-personal" id="phone" name="phone"
-                                        placeholder="Enter Phone Number" required/>
+                                        placeholder="Enter Phone Number" pattern="^\S*$" title="Spaces are not allowed" required/>
                                 </span>
 
                                 <span class="form-field">
@@ -113,7 +97,7 @@
                                         Alternate phone number
                                     </label>
                                     <input type="text" id="alt_phone" name="alt_phone"
-                                        placeholder="Enter Alternate Phone number" required/>
+                                        placeholder="Enter Alternate Phone number" pattern="^\S*$" title="Spaces are not allowed" required/>
                                 </span>
                             </div>
 
@@ -125,7 +109,7 @@
                                 <label>
                                     Aadhar Card
                                 </label>
-                                <input type="file" class="required-field-personal" id="id_proof" name="id_proof" placeholder=""  required/>
+                                <input type="file" class="required-field-personal" id="id_proof" name="id_proof" placeholder="" required/>
                             </span>
                             <span class="form-field" style="vertical-align: top">
                                 <label>
@@ -170,7 +154,7 @@
                                 <label>
                                     Street Address Line-2
                                 </label>
-                                <input type="text" id="line-2" name="line-2" placeholder="Enter Street Address Line-2" />
+                                <input type="text" id="line-2" name="line-2" placeholder="Enter Street Address Line-2"/>
                             </span>
                         </div>
                         <div data-wrapper-react="true" class="form-pair">
@@ -180,14 +164,14 @@
                                     Postal Code
                                 </label>
                                 <input type="text" class="required-field-personal" id="postal-code" name="postal-code"
-                                    placeholder="Enter Postal Code" required/>
+                                    placeholder="Enter Postal Code" pattern="^\S*$" title="Spaces are not allowed" required/>
                             </span>
                             <span class="form-field" style="vertical-align: top">
                                 <br>
                                 <label>
                                     City
                                 </label>
-                                <input type="text" placeholder="Enter City" id="city" name="city" required/>
+                                <input type="text" placeholder="Enter City" id="city" name="city" pattern="^\S*$" title="Spaces are not allowed" required/>
                             </span>
                         </div>
                         <br>
@@ -196,13 +180,13 @@
                                 <label>
                                     State
                                 </label>
-                                <input type="text" placeholder="Enter State" id="state" name="state" required/>
+                                <input type="text" placeholder="Enter State" id="state" name="state" pattern="^\S*$" title="Spaces are not allowed" required/>
                             </span>
                             <span class="form-field" style="vertical-align: top">
                                 <label>
                                     Country
                                 </label>
-                                <input type="text" placeholder="Enter Country" id="country" name="country" required/>
+                                <input type="text" placeholder="Enter Country" id="country" name="country" pattern="^\S*$" title="Spaces are not allowed" required/>
                             </span>
                         </div>
                 </div>
@@ -244,13 +228,13 @@
                             <label aria-hidden="false">
                                 SSC Percentage
                             </label>
-                            <input type="text" class="required-field" id="ssc_per" name="ssc_per" required/>
+                            <input type="text" class="required-field" id="ssc_per" name="ssc_per" pattern="^\S*$" title="Spaces are not allowed" required/>
                         </span>
                         <span class="form-field" style="vertical-align:top">
                             <label aria-hidden="false">
                                 HSC Percentage
                             </label>
-                            <input type="text" class="required-field" id="hsc_per" name="hsc_per" required/>
+                            <input type="text" class="required-field" id="hsc_per" name="hsc_per" pattern="^\S*$" title="Spaces are not allowed" required/>
                         </span>
                     </div>
                     <div data-wrapper-react="true" class="form-pair">
@@ -258,13 +242,13 @@
                             <label aria-hidden="false">
                                 GUJCET Rank
                             </label>
-                            <input type="text" class="required-field" id="gujcet" name="gujcet" required/>
+                            <input type="text" class="required-field" id="gujcet" name="gujcet" pattern="^\S*$" title="Spaces are not allowed" required/>
                         </span>
                         <span class="form-field" style="vertical-align:top">
                             <label aria-hidden="false">
                                 JEE-Main Rank
                             </label>
-                            <input type="text" class="required-field" id="jee" name="jee" required/>
+                            <input type="text" class="required-field" id="jee" name="jee" pattern="^\S*$" title="Spaces are not allowed" required/>
                         </span>
                     </div>
 

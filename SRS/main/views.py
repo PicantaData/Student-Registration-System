@@ -1,20 +1,26 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.core.mail import send_mail
-from django.core.exceptions import ValidationError
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.models import User
-from django.contrib import messages
-from random import randint
-from SRS import settings
-from .models import Application, Notification, Question, ApplicantResponse, Test
-from .validator import MinimumLengthValidator, NumberValidator, UppercaseValidator
-from django.contrib.auth.views import redirect_to_login
+from django.core.exceptions import ValidationError
+from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
 from django.urls import reverse
-from datetime import datetime, timedelta
 from django.utils import timezone
+from random import randint
+from datetime import timedelta
+from SRS.settings import EMAIL_HOST_USER, RAZOR_KEY_ID, RAZOR_KEY_SECRET
+from .models import Application, Notification, Question, ApplicantResponse, Test, Deadline
+from .validators import validate_user_password
+import razorpay
+from SRS import settings
+
+# authorize razorpay client with API Keys.
+razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
+razorpay_client.set_app_details({"title" : "Django", "version" : "4.2.5"})
+
 
 @staff_member_required
 def populateTest(request):
@@ -26,35 +32,53 @@ def populateTest(request):
             application.test_start = startTime
             application.test_end = endTime
             application.save()
-    return render(request, 'admin_startTest.html')
+    return render(request, 'main/admin_startTest.html')
 
 
 def send_otp(email):
     subject = 'OTP'
     otp = randint(100000, 999999)
     message = f"Your OTP is {otp}"
-    from_email = settings.EMAIL_HOST_USER
+    from_email = EMAIL_HOST_USER
     to_list = [email]
+    # try:
     send_mail(subject, message, from_email, to_list)
+    # except SMT:
     return otp
 
 
-def Home(request):
+def Home(request):  
     if request.method == 'POST':
         subject = request.POST['subject']
         message = request.POST['message']
         from_email = request.POST['email']
-        to_list = [settings.EMAIL_HOST_USER]
+        to_list = [EMAIL_HOST_USER]
         send_mail(subject, message, from_email, to_list)
-        return render(request, 'home.html')
+        return render(request, 'main/home.html')
     
+    flag = False
     notifications = Notification.objects.filter(filter_flag='E')
-    context = {'notifications': notifications}
-
-    return render(request, 'home.html', context=context)
+    if request.user.is_authenticated:
+        user = request.user
+        if Application.objects.filter(student=user).exists():
+            app = Application.objects.get(student=user)
+            if app.payment_id is None:
+                flag = "Fees"
+            else:
+                flag = "Dashboard"
+        else:
+            flag = 'Application'
+    
+    context = {'notifications': notifications, 'flag':flag}
+    return render(request, 'main/home.html', context=context)
 
 
 def Register(request):
+    deadline = Deadline.objects.get(name='app_end')
+    if(timezone.now()>deadline.time):
+        messages.error(request, 'Registration Period is closed!!!')
+        return redirect('main:Login')
+
     if request.method == 'POST':
         if('signup-email' in request.POST):
             email = request.POST['signup-email']
@@ -63,27 +87,27 @@ def Register(request):
 
             if User.objects.filter(username=email).exists():
                 messages.error(request, "Email already registered!!!")
-                return render(request, 'register.html')
+                return render(request, 'main/register.html')
 
             if(password!=confirm_password):
                 messages.error(request, 'Password do not match!!!')
-                return render(request, 'register.html')
+                return render(request, 'main/register.html')
             
-            validators = [MinimumLengthValidator, NumberValidator, UppercaseValidator]
             try:
-                for validator in validators:
-                    validator().validate(password)
+                validate_user_password(password)
             except ValidationError as e:
-                messages.error(request, str(e))
-                return render(request, 'register.html')
+                # Print all error on one ?
+                # for error in e.message_dict['password']:
+                #     messages.error(request, error)
+                messages.error(request, e.message_dict['password'][0])
+                return render(request, 'main/register.html')
 
             otp = send_otp(email)
-            # otp = 0
             request.session['otp'] = otp
             request.session['email'] = email
             request.session['password'] = password
             messages.success(request, "OTP has been sent to your email address!!")
-            return render(request, 'otp.html')
+            return render(request, 'main/otp.html')
         
         if('otp' in request.POST):
             if(int(request.POST['otp'])==int(request.session['otp'])):
@@ -92,12 +116,12 @@ def Register(request):
                 User.objects.create_user(username=email, email=email, password=password)
                 user = authenticate(username=email, password=password)
                 login(request, user)
-                return redirect('FillApplication')
+                return redirect('main:FillApplication')
             else:
                 messages.error(request, "Invalid OTP!!!")
-                return render(request, 'otp.html')
+                return render(request, 'main/otp.html')
         
-    return render(request, 'register.html')
+    return render(request, 'main/register.html')
 
 
 def Login(request):
@@ -116,19 +140,23 @@ def Login(request):
             except Application.DoesNotExist:
                 if next:
                     messages.error(request, "The registration period is over! You are not eligible to give test.")
-                    return redirect('Login')
+                    return redirect('main:Login')
                 else:                    
-                    return redirect('FillApplication')
+                    return redirect('main:FillApplication')
             
             if next:
                 return redirect(next)
             else:
-                return redirect('Dashboard')
+                if(app.payment_id==None):
+                    return redirect('main:PayFees')
+                else:
+                    return redirect('main:Dashboard')
+                
         else:
             messages.error(request, 'Incorrect Email or Password!!!')
-            return render(request, 'login.html')
+            return render(request, 'main/login.html')
 
-    return render(request, 'login.html')
+    return render(request, 'main/login.html')
 
 
 def Forget(request):
@@ -136,10 +164,10 @@ def Forget(request):
         if 'otp' in request.POST:
             if(int(request.POST['otp'])==int(request.session['otp'])):
                 messages.success(request, "OTP matched successfully!!!")
-                return render(request, 'change_password.html')
+                return render(request, 'main/change_password.html')
             else:
                 messages.error(request, "Invalid OTP!!!")
-                return render(request, 'otp.html')
+                return render(request, 'main/otp.html')
             
         if 'change-password' in request.POST:
             email = request.session['email']
@@ -148,21 +176,20 @@ def Forget(request):
 
             if password!=confirm_password : 
                 messages.error(request, "Password do not match!!!")
-                return render(request, 'change_password.html')
+                return render(request, 'main/change_password.html')
             
-            validators = [MinimumLengthValidator, NumberValidator, UppercaseValidator]
             try:
-                for validator in validators:
-                    validator().validate(password)
+                validate_user_password(password)
             except ValidationError as e:
-                messages.error(request, str(e))
-                return render(request, 'change_password.html')
+                for error in e.message_dict['password']:
+                    messages.error(request, error)
+                return render(request, 'main/change_password.html')
             
             user = User.objects.get(username=email)
             user.set_password(password)
             user.save()
             messages.success(request, "Your password has been successfully changed !!!")
-            return redirect('Login')
+            return redirect('main:Login')
 
         if 'forget-email' in request.POST:
             email = request.POST['forget-email']
@@ -171,26 +198,35 @@ def Forget(request):
                 request.session['otp'] = otp
                 request.session['email'] = email
                 messages.success(request, "OTP has been sent to your email address!!")
-                return render(request, 'otp.html')
+                return render(request, 'main/otp.html')
             else:
                 messages.error(request, 'Email Does Not Exist')
-                return render(request, 'forget.html')
+                return render(request, 'main/forget.html')
 
-    return render(request, 'forget.html')
+    return render(request, 'main/forget.html')
 
 
 @login_required
 def FillApplication(request):
     user = request.user
+    if Application.objects.filter(student=user).exists():
+        applicant = Application.objects.get(student=user)
+        if applicant.payment_id is None:
+            return redirect('main:PayFees')
+        return redirect('main:Dashboard')
+
     if request.method == 'POST':
-        # print(request.POST)
-        # print(request.FILES)
         name = request.POST['fname'] + ' ' + request.POST['mname'] + ' ' + request.POST['lname']
         gender = request.POST.get('gender')
         dob = request.POST['dob']
-
         
-        address = request.POST['line-1'] + ', ' + request.POST.get('line-2') + ', ' + request.POST['city'] + ', ' + request.POST['state'] + ', ' + request.POST['country'] + ', ' + request.POST['postal-code']
+        address = request.POST['line-1']
+        if(request.POST['line-2']):
+            address += ', ' + request.POST['line-2']
+        city = request.POST['city']
+        state = request.POST['state']
+        country = request.POST['country'] 
+        postal_code = request.POST['postal-code']
         phone = request.POST['phone']
         alt_phone = request.POST['alt_phone']
 
@@ -208,10 +244,52 @@ def FillApplication(request):
         photo = request.FILES.get('photo')
         marks_10 = request.FILES.get('marks_10')
         marks_12 = request.FILES.get('marks_12')
-        Application.objects.create(name=name, gender=gender, dob=dob, address=address, phone=phone, alt_phone=alt_phone, father=father, mother=mother, ssc=ssc, ssc_per=ssc_per, hsc=hsc, hsc_per=hsc_per, gujcet=gujcet, jee=jee, student=user, id_proof=id_proof, photo=photo, marks_10=marks_10, marks_12=marks_12)
-        return redirect('Dashboard')
+        Application.objects.create(name=name, gender=gender, dob=dob, address=address, city=city, state=state, country=country, postal_code=postal_code, phone=phone, alt_phone=alt_phone, father=father, mother=mother, ssc=ssc, ssc_per=ssc_per, hsc=hsc, hsc_per=hsc_per, gujcet=gujcet, jee=jee, student=user, id_proof=id_proof, photo=photo, marks_10=marks_10, marks_12=marks_12)
 
-    return render(request, 'fill_application.html')
+        return redirect('main:PayFees')
+
+    return render(request, 'main/fill_application.html')
+
+@login_required
+def PayFees(request):
+    user = request.user
+    applicant = Application.objects.get(student=user)
+    if applicant.payment_id is not None:
+        return redirect('main:Dashboardd')
+
+    #Razorpay Payment
+    currency = 'INR'
+    amount = 100*100  # Rs. 100
+
+    razorpay_order = razorpay_client.order.create(dict(amount=amount, currency=currency, payment_capture='0'))
+    razorpay_order_id = razorpay_order['id']
+    applicant.order_id = razorpay_order_id
+    applicant.save()
+
+    razorpay_order = razorpay_client.order.create(dict(amount=amount, currency=currency, payment_capture='1'))
+    razorpay_order_id = razorpay_order['id']
+
+    razorpay = "https://razorpay.com/payment-button/pl_MgAaDNUDkk2msX/view/?utm_source=payment_button&utm_medium=button&utm_campaign=payment_button"
+
+    request.session['user'] = user.email
+    request.session.set_expiry(0)
+
+    return HttpResponseRedirect(razorpay)
+
+def success(request, amount):
+    if not request.session.get('user'):
+        return redirect('main:Home')
+
+    if User.objects.filter(username=request.session.get('user')).exists():
+        user = User.objects.get(username=request.session['user'])
+        applicant = Application.objects.get(student=user)
+        applicant.payment_id = request.GET.get('payment_id', '')
+        applicant.save()
+        request.session.pop('user', '')
+        return redirect('main:Dashboard')
+    else:
+        messages.error(request,'The payment failed! Please try Again.')
+        return redirect('main:Home')
 
 
 @login_required
@@ -221,29 +299,38 @@ def Dashboard(request):
     notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)
     
     context = {'application' : app, 'notifications' : notification}
-
-    return render(request, 'dashboard.html', context=context)
+    
+    return render(request, 'main/dashboard.html', context=context)
     
 
 def Logout(request):
     logout(request)
-    return redirect('Home')
+    return redirect('main:Home')
 
 
-@login_required
+@login_required()
 def startTest(request):
+    #Add constraint for Application Status = Accepted!
     user = request.user
     try:
         user_application = Application.objects.get(student=user)
     except Application.DoesNotExist:
         messages.error(request, "The registration period is over! You are not eligible to give test.")
-        return redirect('Login')
+        return redirect('main:Login')
+    
+    timestampToday = timezone.now()
+    if timestampToday < user_application.test_start:
+        messages.error(request, f"The test will start from {user_application.test_start}!")
+        return redirect('main:Dashboard')
+    if timestampToday > user_application.test_end:
+        messages.error(request, "The test window has ended!")
+        return redirect('main:Dashboard')
     
     try:
         test = Test.objects.get(app_no=user_application)
         if test.test_end is not None:
             messages.success(request, "Your test has already ended! You can now view your result")
-            return redirect('Dashboard')
+            return redirect('main:Dashboard')
     except Test.DoesNotExist:
         pass
     
@@ -252,14 +339,16 @@ def startTest(request):
             test = Test.objects.get(app_no=user_application)
         except Test.DoesNotExist:
             test = Test.objects.create(app_no=user_application, test_start=timezone.now())
-        return redirect(reverse('Next_Question', args=(1,)))
+        return redirect(reverse('main:Next_Question', args=(1,)))
+    
 
     
-    return render(request,'instructions.html')
+    return render(request,'main/instructions.html')
 
 
 def nextQuestion(request, question_id):
     if request.user.is_authenticated:
+        #Write a constraint where the student should have testWindowStart timestamp. ->In case he jumps directly to url /test/1. This constraint will also support the test window constraint written in view above.
         user = request.user
         question = Question.objects.get(qid = question_id)
         qCount = Question.objects.all().count()
@@ -268,13 +357,13 @@ def nextQuestion(request, question_id):
         test = Test.objects.get(app_no=user_application)
         if test.test_end is not None:
             messages.success(request, "Your test has already ended! You can now view your result")
-            return redirect('Dashboard')
+            return redirect('main:Dashboard')
 
         time_left = test.test_start + timedelta(minutes=5) - timezone.now()
         hours, remainder = divmod(time_left.total_seconds(), 3600)
         minutes, seconds = divmod(remainder, 60)
     else:
-        return redirect('StartTest')
+        return redirect('main:StartTest')
 
     try:
         user_response = ApplicantResponse.objects.get(app_no = user_application, ques = question)
@@ -285,7 +374,7 @@ def nextQuestion(request, question_id):
         if 'clear' in request.POST:
             user_response.response = ""
             user_response.save()
-            return redirect(reverse('Next_Question', args=(question.qid,)))
+            return redirect(reverse('main:Next_Question', args=(question.qid,)))
            
         user_curr_ans = request.POST.get('answer')
         if user_response is not None:
@@ -295,15 +384,16 @@ def nextQuestion(request, question_id):
             user_response = ApplicantResponse.objects.create(app_no__user = user, ques__qid = question_id, response = user_curr_ans)
 
         if 'end' in request.POST:
-            return redirect('EndTest')
+            return redirect('main:EndTest')
         
         if 'submit' in request.POST:
             if(question_id==Question.objects.count()):
-                messages.success(request,'You have answered all the question. Please review your answers and submit')
-                return redirect(reverse('Next_Question', args=(1,)))
+                messages.success(request,'You have reached the end of test. Please review your answers and submit')
+                return redirect(reverse('main:Next_Question', args=(1,)))
             next_question = Question.objects.get(qid=question_id+1)
-            options = [next_question.op1, next_question.op2,next_question.op3,next_question.op4]
-            return redirect(reverse('Next_Question', args=(next_question.qid,)))
+            #This is not required ig
+            # options = [next_question.op1, next_question.op2,next_question.op3,next_question.op4]
+            return redirect(reverse('main:Next_Question', args=(next_question.qid,)))
             
     context = {
                 'question': question, 
@@ -317,7 +407,8 @@ def nextQuestion(request, question_id):
                 'seconds': seconds,    
             }
     
-    return render(request, 'questions.html', context=context)
+    return render(request, 'main/questions.html', context=context)
+
 
 def EndTest(request):
     if request.user.is_authenticated:
@@ -326,49 +417,53 @@ def EndTest(request):
         responses = ApplicantResponse.objects.filter(app_no=user_application)
         test = Test.objects.get(app_no=user_application)
     else:
-        return redirect('StartTest')
+        return redirect('main:StartTest')
 
     test.test_end=timezone.now()
 
-    total = Question.objects.count()
-    score = 0
+    total = Question.objects.count()*4
+    correct = 0
+    incorrect = 0
     for i in responses:
+        if i.response == '':
+            continue
         question = i.ques
         if question.ans==i.response:
-            score+=1
+            correct+=1
+        else:
+            incorrect+=1
+
+    unanswered = Question.objects.count()-incorrect-correct
+    score = correct*4-incorrect
     test.score=score
     test.save()
 
-    context = {'score':score, 'total': total}
-    return render(request, 'result.html', context=context)
+    context = {'total':total, 'correct':correct, 'incorrect':incorrect, 'unanswered':unanswered, 'score':score}
+    return render(request, 'main/result.html', context=context)
 
 @login_required
 def Result(request):
     user = request.user
     app = Application.objects.get(student=user)
+    responses = ApplicantResponse.objects.filter(app_no=app)
     test = Test.objects.get(app_no=app)
-    total = Question.objects.count()
-    score = test.score
-    context = {'total':total, 'score':score}
+    total = Question.objects.count()*4
 
-    return render(request, 'result.html', context=context)
+    correct = 0
+    incorrect = 0
+    for i in responses:
+        if i.response == '':
+            continue
+        question = i.ques
+        if question.ans==i.response:
+            correct+=1
+        else:
+            incorrect+=1
 
+    unanswered = Question.objects.count()-incorrect-correct
+    score = correct*4-incorrect
+    test.score=score
+    test.save()
 
-# @login_required
-# def Admin(request):
-#     return render(request, 'administration.html')
-
-# @login_required
-# def ViewApplication(request):
-#     apps = Application.objects.filter()
-#     context = {'apps': apps}
-#     return render(request, 'view_applications.html', context=context)
-
-# @login_required
-# def Profile(request, email):
-#     user = User.objects.get(username=email)
-#     app = Application.objects.get(student=user)
-#     notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)
-    
-#     context = {'application' : app, 'notifications' : notification}
-#     return render(request, 'profile.html', context=context)
+    context = {'total':total, 'correct':correct, 'incorrect':incorrect, 'unanswered':unanswered, 'score':score}
+    return render(request, 'main/result.html', context=context)

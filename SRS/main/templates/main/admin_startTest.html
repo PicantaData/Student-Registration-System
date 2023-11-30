@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Define start test</title>
+    <title>Define Start Test</title>
 </head>
 <body>
     <form method="POST">
         {% csrf_token %}
         <label for="start-time">Start Time</label>
-        <input type="date" id="start-time" name="start-time" required>
+        <input type="datetime-local" id="start-time" name="start-time" required>
         <br>
         <br>
         <label for="end-time">End Time </label>
-        <input type="date" id="end-time" name="end-time" required>
+        <input type="datetime-local" id="end-time" name="end-time" required>
         <br>
         <br>
         <button type="submit" value="submit">Set Test Window</button>
