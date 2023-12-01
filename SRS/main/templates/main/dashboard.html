@@ -67,6 +67,7 @@
                   <span>Test</span>
               </a>
             </li>
+            {% if feesPaid %}
             <!-- Feereceipt-->
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsethree"
@@ -75,15 +76,18 @@
                     <i class="fas fa-angle-right" id="arr-right" style="font-size: 16px;display: inline; float: right;"></i>                </a>
                 <div id="collapsethree" class="collapse" aria-labelledby="headingthree" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="" target="_blank">Get Receipt</a>
+                        <a class="collapse-item" href="{{application.payment_receipt.url}}" target="_blank">Get Receipt</a>
                     </div>
                 </div>
             </li>
+            {% endif %}
+            {% if testGiven %}
             <!-- Result -->
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'main:Result' %}">
                   <span>Result</span></a>
             </li>
+            {% endif %}
             <!-- Nav Item - Changepassword -->
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'main:Forget' %}">
@@ -210,14 +214,14 @@
                           <div class="col-sm-3">
                             <h6 class="mb-0">Fee Payment Status</h6>
                           </div>
-                          {% if Fees_Paid %}
+                          {% if feesPaid %}
                           <div class="col-sm-3 text-secondary">Paid</div>
                           {% else %}
                           <div class="col-sm-3 text-secondary">Unpaid</div>
                           {% endif %}
                         </div>
                         <hr>
-                        {% if not Fees_Paid %}
+                        {% if not feesPaid %}
                         <div class="row">
                           <div class="col-sm-8 text-center"></div>
                           <a href="{% url 'main:PayFees' %}"><button class="btn btn-success" type="submit">Pay Now</button></a>

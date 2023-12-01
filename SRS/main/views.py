@@ -4,18 +4,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.core.files.base import ContentFile
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
-from random import randint
 from datetime import timedelta
+from io import BytesIO
+from random import randint
 from SRS.settings import EMAIL_HOST_USER, RAZOR_KEY_ID, RAZOR_KEY_SECRET
 from .models import Application, Notification, Question, ApplicantResponse, Test, Deadline
 from .validators import validate_user_password
 import razorpay
-from SRS import settings
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
 
 # authorize razorpay client with API Keys.
 razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
@@ -144,10 +147,7 @@ def Login(request):
             if next:
                 return redirect(next)
             else:
-                if(app.payment_id==None):
-                    return redirect('main:PayFees')
-                else:
-                    return redirect('main:Dashboard')
+                return redirect('main:Dashboard')
                 
         else:
             messages.error(request, 'Incorrect Email or Password!!!')
@@ -273,6 +273,27 @@ def PayFees(request):
 
     return HttpResponseRedirect(razorpay)
 
+def generate_receipt_pdf(company_name, user_name, app_num, amount_paid, order_id, pay_id):
+    # Create a PDF document
+    pdf_buffer = BytesIO()
+    c = canvas.Canvas(pdf_buffer, pagesize=letter)
+    c.setFont("Helvetica", 12)
+    c.drawString(100, 750, "Payment Receipt")
+    c.drawString(100, 730, "Company Name: {}".format(company_name))
+    c.drawString(100, 710, "Application Number: {}".format(app_num))
+    c.drawString(100, 690, "User's Name: {}".format(user_name))
+    c.drawString(100, 670, "Amount Paid: INR {}".format(amount_paid))
+    c.drawString(100, 650, "Order Id: {}".format(order_id))
+    c.drawString(100, 630, "Payment Id: {}".format(pay_id))
+
+    pdf_title = 'Receipt for {} - {}'.format(user_name, amount_paid)
+    c.setTitle(pdf_title)
+
+    # Save the PDF to the buffer
+    c.save()
+
+    return pdf_buffer.getvalue()
+
 def success(request, amount):
     if not request.session.get('user'):
         return redirect('main:Home')
@@ -281,7 +302,10 @@ def success(request, amount):
         user = User.objects.get(username=request.session['user'])
         applicant = Application.objects.get(student=user)
         applicant.payment_id = str(amount) + request.GET.get('payment_id', '')
+        pdf_receipt = generate_receipt_pdf('Student Registration System',applicant.name, applicant.app_no, amount, applicant.order_id, applicant.payment_id)
         applicant.save()
+        applicant.payment_receipt.save('payment_receipt.pdf', ContentFile(pdf_receipt))
+        # applicant.payment_receipt.name = "payment_receipt.pdf"
         request.session.pop('user', '')
         messages.success(request,'The payment was successful. Check your email for receipt.')
         return redirect('main:Dashboard')
@@ -295,15 +319,21 @@ def Dashboard(request):
     user = request.user
     app = Application.objects.get(student=user)
     #Check if Fees are Paid
-    check = False
+    feesPaid = False
     if app.payment_id is not None:
-        check=True
+        feesPaid=True
     else:
         messages.info(request,"Please pay test fees to be eligible to give test.")
+    
+    testGiven = Test.objects.filter(app_no=app.id).exists()
 
     notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)
     
-    context = {'application' : app, 'notifications' : notification, 'Fees_Paid' : check}
+    context = {'application' : app, 
+               'notifications' : notification, 
+               'feesPaid' : feesPaid, 
+               'testGiven':testGiven
+               }
     
     return render(request, 'main/dashboard.html', context=context)
     
@@ -315,7 +345,6 @@ def Logout(request):
 
 @login_required()
 def startTest(request):
-    #Add constraint for Application Status = Accepted!
     user = request.user
     try:
         user_application = Application.objects.get(student=user)
@@ -453,7 +482,7 @@ def EndTest(request):
         return redirect('main:StartTest')
 
     test.test_end=timezone.now()
-
+    #Calculating score
     total = Question.objects.count()*4
     correct = 0
     incorrect = 0
@@ -481,7 +510,7 @@ def Result(request):
     responses = ApplicantResponse.objects.filter(app_no=app)
     test = Test.objects.get(app_no=app)
     total = Question.objects.count()*4
-    #Calculate user's final Score
+    #Calculate user's score if answer key changes
     correct = 0
     incorrect = 0
     for i in responses:
@@ -497,6 +526,5 @@ def Result(request):
     score = correct*4-incorrect
     test.score=score
     test.save()
-
     context = {'total':total, 'correct':correct, 'incorrect':incorrect, 'unanswered':unanswered, 'score':score}
     return render(request, 'main/result.html', context=context)
