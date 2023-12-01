@@ -36,14 +36,12 @@ def populateTest(request):
 
 
 def send_otp(email):
-    subject = 'OTP'
+    subject = 'OTP for Student Registration System'
     otp = randint(100000, 999999)
-    message = f"Your OTP is {otp}"
+    message = f"Greetings!\nYour OTP is {otp}\n\nThank You!"
     from_email = EMAIL_HOST_USER
     to_list = [email]
-    # try:
     send_mail(subject, message, from_email, to_list)
-    # except SMT:
     return otp
 
 
@@ -126,7 +124,6 @@ def Register(request):
 
 def Login(request):
     if request.method == 'POST':
-        # print(request.POST)
         email = request.POST['signin-email']
         password = request.POST['signin-password']
 
@@ -283,9 +280,10 @@ def success(request, amount):
     if User.objects.filter(username=request.session.get('user')).exists():
         user = User.objects.get(username=request.session['user'])
         applicant = Application.objects.get(student=user)
-        applicant.payment_id = request.GET.get('payment_id', '')
+        applicant.payment_id = str(amount) + request.GET.get('payment_id', '')
         applicant.save()
         request.session.pop('user', '')
+        messages.success(request,'The payment was successful. Check your email for receipt.')
         return redirect('main:Dashboard')
     else:
         messages.error(request,'The payment failed! Please try Again.')
@@ -296,9 +294,16 @@ def success(request, amount):
 def Dashboard(request):
     user = request.user
     app = Application.objects.get(student=user)
+    #Check if Fees are Paid
+    check = False
+    if app.payment_id is not None:
+        check=True
+    else:
+        messages.info(request,"Please pay test fees to be eligible to give test.")
+
     notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)
     
-    context = {'application' : app, 'notifications' : notification}
+    context = {'application' : app, 'notifications' : notification, 'Fees_Paid' : check}
     
     return render(request, 'main/dashboard.html', context=context)
     
@@ -318,11 +323,26 @@ def startTest(request):
         messages.error(request, "The registration period is over! You are not eligible to give test.")
         return redirect('main:Login')
     
+    check = True
+    if user_application.app_status != 'A':
+        messages.error(request, "Your application is not Accepted!")
+        check = False
+    if user_application.payment_id is None:
+        messages.error(request, "You haven't paid for the test!")
+        check = False
+    
+    try:
+        testWindowStart = Deadline.objects.get(name='test_start')
+        testWindowEnd = Deadline.objects.get(name='test_end')
+    except Deadline.DoesNotExist:
+        messages.info(request, "Test is not available. Please contact Admin.")
+        return redirect('main:Home')
+    
     timestampToday = timezone.now()
-    if timestampToday < user_application.test_start:
-        messages.error(request, f"The test will start from {user_application.test_start}!")
+    if timestampToday < testWindowStart.time:
+        messages.error(request, f"The test will start from {testWindowStart.time}!")
         return redirect('main:Dashboard')
-    if timestampToday > user_application.test_end:
+    if timestampToday > testWindowEnd.time:
         messages.error(request, "The test window has ended!")
         return redirect('main:Dashboard')
     
@@ -341,20 +361,31 @@ def startTest(request):
             test = Test.objects.create(app_no=user_application, test_start=timezone.now())
         return redirect(reverse('main:Next_Question', args=(1,)))
     
-
-    
-    return render(request,'main/instructions.html')
+    return render(request,'main/instructions.html', {'check':check})
 
 
 def nextQuestion(request, question_id):
     if request.user.is_authenticated:
-        #Write a constraint where the student should have testWindowStart timestamp. ->In case he jumps directly to url /test/1. This constraint will also support the test window constraint written in view above.
         user = request.user
-        question = Question.objects.get(qid = question_id)
+        #For unintended urls
+        try:
+            question = Question.objects.get(qid = question_id)
+        except Question.DoesNotExist:
+            messages.warning(request, "Please refrain from changing url! Use navigation panel to switch questions. Start again to resume.")
+            return redirect('main:StartTest')
+        
         qCount = Question.objects.all().count()
         options = [question.op1, question.op2,question.op3,question.op4]
         user_application = Application.objects.get(student=user)
-        test = Test.objects.get(app_no=user_application)
+        
+        #If the test isn't started yet and url is accessed
+        try:
+            test = Test.objects.get(app_no=user_application)
+        except Test.DoesNotExist:
+            messages.warning(request,"You need to accept instructions before starting your test!")
+            return redirect('main:StartTest')
+        
+        #If user retries to access given test
         if test.test_end is not None:
             messages.success(request, "Your test has already ended! You can now view your result")
             return redirect('main:Dashboard')
@@ -365,17 +396,20 @@ def nextQuestion(request, question_id):
     else:
         return redirect('main:StartTest')
 
+    #If user has already answered a particular question
     try:
         user_response = ApplicantResponse.objects.get(app_no = user_application, ques = question)
     except ApplicantResponse.DoesNotExist:
         user_response = ApplicantResponse.objects.create(app_no = user_application, ques = question)
 
+    #User submits a response for a particular question
     if request.method =='POST':    
         if 'clear' in request.POST:
             user_response.response = ""
             user_response.save()
             return redirect(reverse('main:Next_Question', args=(question.qid,)))
            
+        #Updating existing answer if it exists
         user_curr_ans = request.POST.get('answer')
         if user_response is not None:
             user_response.response = user_curr_ans
@@ -383,6 +417,7 @@ def nextQuestion(request, question_id):
         else:
             user_response = ApplicantResponse.objects.create(app_no__user = user, ques__qid = question_id, response = user_curr_ans)
 
+        #To submit the test
         if 'end' in request.POST:
             return redirect('main:EndTest')
         
@@ -391,8 +426,6 @@ def nextQuestion(request, question_id):
                 messages.success(request,'You have reached the end of test. Please review your answers and submit')
                 return redirect(reverse('main:Next_Question', args=(1,)))
             next_question = Question.objects.get(qid=question_id+1)
-            #This is not required ig
-            # options = [next_question.op1, next_question.op2,next_question.op3,next_question.op4]
             return redirect(reverse('main:Next_Question', args=(next_question.qid,)))
             
     context = {
@@ -448,7 +481,7 @@ def Result(request):
     responses = ApplicantResponse.objects.filter(app_no=app)
     test = Test.objects.get(app_no=app)
     total = Question.objects.count()*4
-
+    #Calculate user's final Score
     correct = 0
     incorrect = 0
     for i in responses:

@@ -11,7 +11,13 @@ def file_upload(instance,filename):
     return 'user/{0}/{1}'.format(instance.app_no, filename)
 
 class Deadline(models.Model):
-    name = models.CharField(max_length=50, null=False, blank=False)
+    OPTIONS = [
+        ('app_start', 'Applicaton Start'),
+        ('app_end', 'Application End'),
+        ('test_start', 'Test Start'),
+        ('test_end', 'Test End')
+    ]
+    name = models.CharField(max_length=50, choices=OPTIONS,null=False, blank=False)
     time = models.DateTimeField(null=False, blank=False)
 
     def __str__(self):
@@ -116,10 +122,3 @@ class Test(models.Model):
 
     def __str__(self):
         return str(self.app_no)
-    
-# class TestWindow(models.Model):
-#     start = models.DateTimeField()
-#     end = models.DateTimeField()
-
-#     def __str__(self):
-#         return 'Start: ' + self.start + ' End: ' + self.end

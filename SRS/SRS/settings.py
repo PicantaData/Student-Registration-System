@@ -85,6 +85,12 @@ DATABASES = {
     }
 }
 
+# STORAGES = {
+#     'default': {
+#         "BACKEND": "storages.backends.azure_storage.AzureStorage",
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
@@ -175,3 +181,19 @@ RAZOR_KEY_SECRET = str(os.getenv('RAZOR_KEY_SECRET'))
 # AWS_S3_FILE_OVERWRITE = False
 # AWS_DEFAULT_ACL = None
 # DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
+# Use Azure Blob Storage for media files
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+
+# Azure Storage Account Name and Key
+AZURE_ACCOUNT_NAME = str(os.getenv('AZURE_ACCOUNT_NAME'))
+AZURE_ACCOUNT_KEY = str(os.getenv('AZURE_ACCOUNT_KEY'))
+
+# Azure Container name where media files will be stored
+AZURE_CONTAINER = 'srs-it314'
+
+# Optional: Set the base URL for media files
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+
+# Optional: Set whether to use secure URLs (HTTPS)
+AZURE_USE_HTTPS = True
