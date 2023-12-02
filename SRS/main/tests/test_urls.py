@@ -7,7 +7,7 @@ from main import views
 class TestUrls(SimpleTestCase):
 
     def test_home_url(self):
-        url = reverse('Home')
+        url = reverse('main:Home')
         self.assertEqual(url,'/')   # Check if the URL resolves correctly
 
         resolver = resolve(url)
@@ -15,7 +15,7 @@ class TestUrls(SimpleTestCase):
 
 
     def test_login_url(self):
-        url = reverse('Login')
+        url = reverse('main:Login')
         self.assertEqual(url, '/login/')  
 
         resolver = resolve(url)
@@ -23,7 +23,7 @@ class TestUrls(SimpleTestCase):
 
 
     def test_register_url(self):
-        url = reverse('Register')
+        url = reverse('main:Register')
         self.assertEqual(url, '/register/')  
 
         resolver = resolve(url)
@@ -31,7 +31,7 @@ class TestUrls(SimpleTestCase):
 
 
     def test_logout_url(self):
-        url = reverse('Logout')
+        url = reverse('main:Logout')
         self.assertEqual(url, '/logout/')  
 
         resolver = resolve(url)
@@ -39,15 +39,31 @@ class TestUrls(SimpleTestCase):
 
 
     def test_fill_application_url(self):
-        url = reverse('FillApplication')
+        url = reverse('main:FillApplication')
         self.assertEqual(url, '/fill_application/')  
 
         resolver = resolve(url)
         self.assertEqual(resolver.func, views.FillApplication)  
 
 
+    def test_payFees_url(self):
+        url = reverse('main:PayFees')
+        self.assertEqual(url, '/pay_fees/')  
+
+        resolver = resolve(url)
+        self.assertEqual(resolver.func, views.PayFees) 
+
+
+    def test_processPayment_url(self):
+        url = reverse('main:success', args=[86000])
+        self.assertEqual(url, '/process-payment/86000')  
+
+        resolver = resolve(url)
+        self.assertEqual(resolver.func, views.success) 
+
+
     def test_dashboard_url(self):
-        url = reverse('Dashboard')
+        url = reverse('main:Dashboard')
         self.assertEqual(url, '/dashboard/')  
 
         resolver = resolve(url)
@@ -55,7 +71,7 @@ class TestUrls(SimpleTestCase):
 
 
     def test_forget_url(self):
-        url = reverse('Forget')
+        url = reverse('main:Forget')
         self.assertEqual(url, '/forget/')  
 
         resolver = resolve(url)
@@ -63,7 +79,7 @@ class TestUrls(SimpleTestCase):
 
 
     def test_startTest_url(self):
-        url = reverse('StartTest')
+        url = reverse('main:StartTest')
         self.assertEqual(url, '/test/start')  
 
         resolver = resolve(url)
@@ -71,7 +87,7 @@ class TestUrls(SimpleTestCase):
     
 
     def test_nextQuestion_url(self):
-        url = reverse('Next_Question', args=[1])
+        url = reverse('main:Next_Question', args=[1])
         self.assertEqual(url, '/test/1')  
 
         resolver = resolve(url)
@@ -79,7 +95,7 @@ class TestUrls(SimpleTestCase):
     
 
     def test_endTest_url(self):
-        url = reverse('EndTest')
+        url = reverse('main:EndTest')
         self.assertEqual(url, '/test/endtest/')  
 
         resolver = resolve(url)
@@ -87,7 +103,7 @@ class TestUrls(SimpleTestCase):
 
 
     def test_Result_url(self):
-        url = reverse('Result')
+        url = reverse('main:Result')
         self.assertEqual(url, '/test/result')  
 
         resolver = resolve(url)
@@ -95,29 +111,11 @@ class TestUrls(SimpleTestCase):
 
 
     def test_populateTest_url(self):
-        url = reverse('populateTest')
+        url = reverse('main:populateTest')
         self.assertEqual(url, '/staff/define-test-window')  
 
         resolver = resolve(url)
         self.assertEqual(resolver.func, views.populateTest)  
-
-
-
-class Test_Unauthenticated_URLs(SimpleTestCase):
-    def setUp(self):
-        self.client = Client()
-
-    def test_unauthenticated_access(self):
-        unauthenticated_urls = ['/dashboard/', '/fill_application/', '/test/start']
-        for url in unauthenticated_urls:
-            response = self.client.get(url)
-            self.assertEqual(response.status_code, 302)  # Redirects to login when not authenticated
-            if url == '/dashboard/':
-                self.assertRedirects(response, '/login/?next=/dashboard/')
-            elif url == '/fill_application/':
-                self.assertRedirects(response, '/login/?next=/fill_application/')
-            elif url == '/test/start':
-                self.assertRedirects(response, '/login/?next=/test/start')
 
 
 

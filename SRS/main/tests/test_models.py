@@ -1,7 +1,8 @@
 from django.test import TestCase
 from main import models
 from django.contrib.auth.models import User
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
+from django.utils import timezone
 
 class Test_ApplicationModel(TestCase):
     def setUp(self):
@@ -174,5 +175,16 @@ class Test_TestModel(TestCase):
         self.assertEqual(test.score,30)
 
 
+class Test_DeadlineModel(TestCase):
+    
+    def setUp(self):
+        self.ApplicationStart = models.Deadline.objects.create(name='Applicaton Start', time=timezone.now() + timezone.timedelta(days=1))
+        self.ApplicationEnd = models.Deadline.objects.create(name='Application End', time=timezone.now() + timezone.timedelta(days=2))
+        self.TestStart = models.Deadline.objects.create(name='Test Start', time=timezone.now() + timezone.timedelta(days=3))
+        self.TestEnd = models.Deadline.objects.create(name='Test End', time=timezone.now() + timezone.timedelta(days=4))
         
-
+    def test_deadline_creation(self):
+        self.assertIsNotNone(self.ApplicationStart.time)
+        self.assertIsNotNone(self.ApplicationEnd.time)
+        self.assertIsNotNone(self.TestStart.time)
+        self.assertIsNotNone(self.TestEnd.time)
