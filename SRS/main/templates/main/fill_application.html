@@ -42,13 +42,13 @@
                                     First Name
                                 </label>
                                 <input type="text" class="required-field-personal" id="fname" name="fname"
-                                    placeholder="Enter First Name" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                    placeholder="Enter First Name" pattern="[A-Za-z]{0-15}"  required/>
                             </span>
                             <span class="form-field" style="vertical-align:top">
                                 <label aria-hidden="false">
                                     Middle Name
                                 </label>
-                                <input type="text" id="mname" name="mname" placeholder="Enter Middle Name" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                <input type="text" id="mname" name="mname" placeholder="Enter Middle Name" pattern="[A-Za-z]{0-15}"  required/>
                             </span>
 
                             <span class="form-field" style="vertical-align:top">
@@ -56,14 +56,14 @@
                                     Last Name
                                 </label>
                                 <input type="text" class="required-field-personal" id="lname" name="lname"
-                                    placeholder="Enter Last Name" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                    placeholder="Enter Last Name" pattern="[A-Za-z]{0-15}"  required/>
                             </span>
                         </div>
                         <br>
                         <h3 id="gender">Gender</h3>
                         <div data-wrapper-react="true" class="gender">
                             <span class="span-gender" style="vertical-align:top">
-                                <input type="radio" name="gender" id="male" value="M" /> Male
+                                <input type="radio" name="gender" id="male" value="M" required/> Male
                                 <input type="radio" name="gender" id="female" value="F" /> Female
                                 <input type="radio" name="gender" id="prefer-not-say" value="P" /> Prefer Not To Say
                             </span>
@@ -75,7 +75,7 @@
                                 <label aria-hidden="false">
                                     Birthdate
                                 </label>
-                                <input type="date" class="required-field" id="dob" name="dob" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                <input type="date" class="required-field" id="dob" name="dob" pattern="^\S*$"  required/>
                             </span>
 
                         </div>
@@ -88,8 +88,8 @@
                                     <label aria-hidden="false">
                                         Phone number
                                     </label>
-                                    <input type="text" class="required-field-personal" id="phone" name="phone"
-                                        placeholder="Enter Phone Number" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                    <input type="text" class="required-field-personal" id="phone" name="phone" maxlength="10" minlength="10"
+                                        placeholder="Enter Phone Number" pattern="[0-9]{10}"  required/>
                                 </span>
 
                                 <span class="form-field">
@@ -97,7 +97,8 @@
                                         Alternate phone number
                                     </label>
                                     <input type="text" id="alt_phone" name="alt_phone"
-                                        placeholder="Enter Alternate Phone number" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                        minlength="10" maxlength="10"
+                                        placeholder="Enter Alternate Phone number" pattern="[0-9]{10}"  required/>
                                 </span>
                             </div>
 
@@ -109,14 +110,13 @@
                                 <label>
                                     Aadhar Card
                                 </label>
-                                <input type="file" class="required-field-personal" id="id_proof" name="id_proof" placeholder="" required/>
+                                <input type="file" accept=".pdf,.jpg,.jpeg"class="required-field-personal" id="id_proof" name="id_proof" placeholder="" required/>
                             </span>
                             <span class="form-field" style="vertical-align: top">
                                 <label>
                                     Photo
                                 </label>
-                                <input type="file" class="required-field-personal" id="photo" name="photo"
-                                    placeholder="" required/>
+                                <input type="file" accept=".jpg,.jpeg,.png" class="required-field-personal" id="photo" name="photo" placeholder="" required/>
                             </span>
                         </div>
                         <br>
@@ -126,14 +126,14 @@
                                 <label>
                                     Father's Name
                                 </label>
-                                <input type="text" class="required-field-personal" id="father" name="father"
+                                <input type="text" class="required-field-personal" id="father" name="father" pattern="[A-Za-z]{1-30}"
                                     placeholder="Enter Father's Name" required/>
                             </span>
                             <span class="form-field" style="vertical-align: top">
                                 <label>
                                     Mother's Name
                                 </label>
-                                <input type="text" class="required-field-personal" id="mother" name="mother"
+                                <input type="text" class="required-field-personal" id="mother" name="mother" pattern="[A-Za-z]{1-30}"
                                     placeholder="Enter Mother's Name" required/>
                             </span>
                         </div>
@@ -163,15 +163,15 @@
                                 <label>
                                     Postal Code
                                 </label>
-                                <input type="text" class="required-field-personal" id="postal-code" name="postal-code"
-                                    placeholder="Enter Postal Code" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                <input type="text" class="required-field-personal" id="postal-code" name="postal-code" minlength="6" maxlength="6"
+                                    placeholder="Enter Postal Code" pattern="[0-9]{6}"  required/>
                             </span>
                             <span class="form-field" style="vertical-align: top">
                                 <br>
                                 <label>
                                     City
                                 </label>
-                                <input type="text" placeholder="Enter City" id="city" name="city" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                <input type="text" placeholder="Enter City" id="city" name="city" pattern="[A-Za-z]{1-20}"  required/>
                             </span>
                         </div>
                         <br>
@@ -180,13 +180,13 @@
                                 <label>
                                     State
                                 </label>
-                                <input type="text" placeholder="Enter State" id="state" name="state" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                <input type="text" placeholder="Enter State" id="state" name="state" pattern="[A-Za-z]{1-20}"  required/>
                             </span>
                             <span class="form-field" style="vertical-align: top">
                                 <label>
                                     Country
                                 </label>
-                                <input type="text" placeholder="Enter Country" id="country" name="country" pattern="^\S*$" title="Spaces are not allowed" required/>
+                                <input type="text" placeholder="Enter Country" id="country" name="country" pattern="[A-Za-z]{1-20}"  required/>
                             </span>
                         </div>
                 </div>
@@ -202,23 +202,23 @@
                             <label aria-hidden="false">
                                 Secondary School (10<sup>th</sup>)
                             </label>
-                            <input type="text" class="required-field" id="ssc" name="ssc" required/>
+                            <input type="text" class="required-field" id="ssc" name="ssc" pattern="[A-Za-z]{1-100}" required/>
                         </span>
                         <span class="form-field" style="vertical-align:top">
                             <label aria-hidden="false">
                                 Higher Secondary School (12<sup>th</sup>)
                             </label>
-                            <input type="text" class="required-field" id="hsc" name="hsc" required/>
+                            <input pattern="[A-Za-z]{1-100}" type="text" class="required-field" id="hsc" name="hsc" required/>
                         </span>
                         <br>
                     </div>
                     <div data-wrapper-react="true" class="form-pair">
                         <div class="form-field">
-                            <p class="mb-2">Upload 10<sup>th</sup> Marksheet:</p><input type="file" class="form-control"
+                            <p class="mb-2">Upload 10<sup>th</sup> Marksheet:</p><input type="file" accept=".pdf,.jpg,.jpeg" class="form-control"
                                 name="marks_10" id="marks_10" required="">
                         </div>
                         <div class="form-field">
-                            <p class="mb-2">Upload 12<sup>th</sup> Marksheet:</p><input type="file" class="form-control"
+                            <p class="mb-2">Upload 12<sup>th</sup> Marksheet:</p><input type="file" accept=".pdf,.jpg,.jpeg" class="form-control"
                                 name="marks_12" id="marks_12" required="">
                         </div>
                     </div>
@@ -228,13 +228,13 @@
                             <label aria-hidden="false">
                                 SSC Percentage
                             </label>
-                            <input type="text" class="required-field" id="ssc_per" name="ssc_per" pattern="^\S*$" title="Spaces are not allowed" required/>
+                            <input type="text" accept=".pdf,.jpg,.jpeg" class="required-field" id="ssc_per" name="ssc_per" pattern="^100(\.0{0,2})? *%?$|^\d{1,2}(\.\d{1,2})? *%?$"  required/>
                         </span>
                         <span class="form-field" style="vertical-align:top">
                             <label aria-hidden="false">
                                 HSC Percentage
                             </label>
-                            <input type="text" class="required-field" id="hsc_per" name="hsc_per" pattern="^\S*$" title="Spaces are not allowed" required/>
+                            <input type="text" accept=".pdf,.jpg,.jpeg" class="required-field" id="hsc_per" name="hsc_per" pattern="^100(\.0{0,2})? *%?$|^\d{1,2}(\.\d{1,2})? *%?$"  required/>
                         </span>
                     </div>
                     <div data-wrapper-react="true" class="form-pair">
@@ -242,13 +242,13 @@
                             <label aria-hidden="false">
                                 GUJCET Rank
                             </label>
-                            <input type="text" class="required-field" id="gujcet" name="gujcet" pattern="^\S*$" title="Spaces are not allowed" required/>
+                            <input type="text" class="required-field" id="gujcet" name="gujcet" pattern="[0-9]{0-9}"  required/>
                         </span>
                         <span class="form-field" style="vertical-align:top">
                             <label aria-hidden="false">
                                 JEE-Main Rank
                             </label>
-                            <input type="text" class="required-field" id="jee" name="jee" pattern="^\S*$" title="Spaces are not allowed" required/>
+                            <input type="text" class="required-field" id="jee" name="jee" pattern="[0-9]{0-9}"  required/>
                         </span>
                     </div>
 

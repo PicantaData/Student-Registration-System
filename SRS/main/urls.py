@@ -18,6 +18,5 @@ urlpatterns = [
     path('test/<int:question_id>', views.nextQuestion, name='Next_Question'),
     path('test/endtest/', views.EndTest, name='EndTest'),
     path('test/result', views.Result, name='Result'),
-    path('staff/define-test-window', views.populateTest, name='populateTest'),
     path('process-payment/<int:amount>', views.success, name='success'),
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

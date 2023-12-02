@@ -8,9 +8,6 @@
     <style>
       body {
         font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        /* display: flex;
-            justify-content: center;
-            align-items: center;  */
         height: 100vh;
         margin: 0;
         background-color: rgb(126, 176, 220);
@@ -81,12 +78,10 @@
         .sidebar {
           padding-top: 15px;
         }
-
         .sidebar a {
           font-size: 18px;
         }
       }
-
       /*--------------------- Result Card---------- */
       .card {
         width: calc(100% - 140px);
@@ -97,80 +92,102 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         text-align: center;
         height: 250px;
+        margin-top: 15px;
       }
-
-      /* h1 {
-            font-size: 28px; 
-            margin-bottom: 20px;
-            color: #333;
-        } */
-      #scoreDisplay {
-        display: inline-block;
-        margin-right: 10px;
-      }
-
-      #additionalInfo {
-        width: 80px;
-      }
-
-      /* Progress Bar */
-      @keyframes progress {
-        0% {
-          --percentage: 0;
+      #result-title-text {
+          margin-top: auto;
+          font-weight: 500;
+          font-size: 2vw;
         }
-
-        100% {
-          --percentage: var(--value);
+        #result-card-inner {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
         }
-      }
-
-      /* @property --percentage {
-        syntax: '<number>';
-        inherits: true;
-        initial-value: 0;
-      } */
-
-      [role="progressbar"] {
-        --percentage: var(--value);
-        --primary: #369;
-        --secondary: #adf;
-        --size: 11.2vw;
-        animation: progress 2s 0.5s forwards;
-        width: var(--size);
-        aspect-ratio: 1;
-        border-radius: 50%;
-        position: relative;
-        overflow: hidden;
-        display: grid;
-        place-items: center;
-      }
-
-      [role="progressbar"]::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: conic-gradient(var(--primary) calc(var(--percentage) * 1%), var(--secondary) 0);
-        mask: radial-gradient(white 55%, transparent 0);
-        mask-mode: alpha;
-        -webkit-mask: radial-gradient(#0000 55%, #000 0);
-        -webkit-mask-mode: alpha;
-      }
-
-      [role="progressbar"]::after {
-        counter-reset: percentage var(--value);
-        content: counter(percentage) '%';
-        font-family: Helvetica, Arial, sans-serif;
-        font-size: calc(var(--size) / 5);
-        color: var(--primary);
-      }
-      /* When Screen becomes small*/
+        #result-card-score-text, #result-answers {
+          width: 100%;
+          height: auto;
+          display: flex;
+          flex-direction: column;
+        }
+        #result-score-title-text {
+          font-weight: 100;
+          margin: 0px;
+          font-size: 2rem;
+        }
+        #score-content {
+          font-weight: 500;
+           font-size: 1.5rem;
+           color: #228b22;margin: 10px
+        }
+        .answers {
+            font-size: 1rem;
+            padding: 5px;
+            text-align: center;
+            color: green;
+        }
+        .answers_1 {
+            font-size: 1rem;
+            padding: 5px;
+            text-align: center;
+        }
+        .answers_2 {
+            font-size: 1rem;
+            padding: 5px;
+            text-align: center;
+            color: red;
+        }
+      #content-result {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+        }
       @media (max-width: 544px){
-          .card{
-            display: none;
-          }
+        .answers {
+          font-size: 0.5rem;
+        }
+        .answers_1 {
+          font-size: 0.5rem;
+        }
+        .answers_2 {
+          font-size: 0.5rem;
+        }
+        .card {
+          margin-top: 10px;
+          width: 75%;
+        }
+        #result-score-title-text {
+          font-size: 1rem;
+        }
+        #result-title-text {
+          font-size: 1.5rem;
+        }
+        #mySidebar {
+          width: 0px;
+        }
+        #main {
+          margin-left: 0px;
+        }
+      }
+      @media (max-width: 136px){
+        .card {
+          height: 300px;
+        }
+        #result-title-text {
+          font-size: 1rem;
+        }
+        #result-card-title {
+          width: 50px;
+        }
+        #score-content {
+          font-size: 12px;
+        }
+      }
+      @media (max-width: 200px){
+        #score-content {
+          font-size: 12px;
+        }
       }
     </style>
   </head>
@@ -203,6 +220,11 @@
               <h1 style="font-weight: 100;margin: 0px;font-size: 2vw;">Your Score:</h1>
               <p style="font-weight: 500; font-size: 2.4vw;color: #228b22;">{{score}} Out of {{total}}</p>
             </div>
+            <div id="result-answers">
+              <div class="answers">Correct Answers: <span>{{correct}}</span></div>
+              <div class="answers_2">Incorrect Answers: <span>{{incorrect}}</span></div>
+              <div class="answers_1">Unanswered Questions: <span>{{unanswered}}</span></div>
+            </div>
           </div>
         </div>
       </div>
@@ -212,7 +234,6 @@
       function openNav() {
         document.getElementById("mySidebar").style.width = "250px";
         document.getElementById("main").style.marginLeft = "250px";
-        var screenWidth = screen.width;
         if(screen.width < 545){
           document.getElementById("card_content").style.display = "none";
         }
@@ -220,16 +241,16 @@
       function closeNav() {
         document.getElementById("mySidebar").style.width = "0";
         document.getElementById("main").style.marginLeft = "0";
-        /* document.getElementsByClassName("card").style.display = "block"; */
         document.getElementById("card_content").style.display = "block";
-
       }
-      var score = '{{score}}';
-      var total = '{{total}}';
-      var perc = (score / total) * 100;
-      
-      var str = '<div role="progressbar" id="progressbar_circle" aria-valuenow='+perc+' aria-valuemin="0" aria-valuemax="100" style= --value:'+perc+'></div>';  
-      document.getElementById("progress-bar").innerHTML = str;
+      window.addEventListener('resize', function(event) {
+        // console.log("Event",screen.width);
+        var isSidebarOpen = document.getElementById("mySidebar").style.width;
+        if (isSidebarOpen && screen.width < 600 ){
+          document.getElementById("mySidebar").style.width = "0";
+          document.getElementById("main").style.marginLeft = "0";
+        }
+      }, true);
     </script>
   </body>
 </html>

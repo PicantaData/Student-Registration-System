@@ -24,20 +24,6 @@ from reportlab.lib.pagesizes import letter
 razorpay_client = razorpay.Client(auth=(RAZOR_KEY_ID, RAZOR_KEY_SECRET))
 razorpay_client.set_app_details({"title" : "Django", "version" : "4.2.5"})
 
-
-@staff_member_required
-def populateTest(request):
-    if request.method == 'POST':
-        startTime = request.POST['start-time']
-        endTime = request.POST['end-time']
-        applications = Application.objects.all()
-        for application in applications:
-            application.test_start = startTime
-            application.test_end = endTime
-            application.save()
-    return render(request, 'main/admin_startTest.html')
-
-
 def send_otp(email):
     subject = 'OTP for Student Registration System'
     otp = randint(100000, 999999)
@@ -255,7 +241,7 @@ def PayFees(request):
     user = request.user
     applicant = Application.objects.get(student=user)
     if applicant.payment_id is not None:
-        return redirect('main:Dashboardd')
+        return redirect('main:Dashboard')
 
     #Razorpay Payment
     currency = 'INR'
@@ -320,7 +306,10 @@ def success(request, amount):
 @login_required
 def Dashboard(request):
     user = request.user
-    app = Application.objects.get(student=user)
+    try:
+        app = Application.objects.get(student=user)
+    except Application.DoesNotExist:
+        return redirect('main:FillApplication')
     #Check if Fees are Paid
     feesPaid = False
     if app.payment_id is not None:

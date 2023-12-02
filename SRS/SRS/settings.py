@@ -28,7 +28,8 @@ SECRET_KEY = str(os.getenv('SECRET_KEY'))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['https://student-registration-daiict.azurewebsites.net/','*']
+# CSRF_TRUSTED_ORIGINS = ['https://'+ os.environ['WEBSITE_HOSTNAME'],'https://student-registration-daiict.azurewebsites.net', 'https://www.student-registration-daiict.azurewebsites.net']
 
 
 # Application definition
@@ -41,11 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -74,7 +77,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SRS.wsgi.application'
 
-
+STORAGES = {
+    # ...
+    "default": {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage"
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -85,11 +96,6 @@ DATABASES = {
     }
 }
 
-# STORAGES = {
-#     'default': {
-#         "BACKEND": "storages.backends.azure_storage.AzureStorage",
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -140,9 +146,26 @@ LOGIN_URL = 'main:Login'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'main/static/'
+# Use Azure Blob Storage for media files
+# DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+# STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
-STATIC_ROOT = 'main/static/'
+# Azure Storage Account Name and Key
+AZURE_ACCOUNT_NAME = str(os.getenv('AZURE_ACCOUNT_NAME'))
+AZURE_ACCOUNT_KEY = str(os.getenv('AZURE_ACCOUNT_KEY'))
+
+# Azure Container name where media files will be stored
+AZURE_CONTAINER = 'srs-it314'
+
+# Optional: Set the base URL for media files
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+
+# Optional: Set whether to use secure URLs (HTTPS)
+AZURE_USE_HTTPS = True
+
+STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR / 'static/'
 
 MEDIA_URL = 'media/'
 
@@ -162,16 +185,43 @@ EMAIL_PORT = 587
 RAZOR_KEY_ID = str(os.getenv('RAZOR_KEY_ID'))
 RAZOR_KEY_SECRET = str(os.getenv('RAZOR_KEY_SECRET'))
 
-# JAZZMIN_SETTINGS = {
-#     # title of the window (Will default to current_admin_site.site_title if absent or None)
-#     "site_title": "Student Registration System",
+JAZZMIN_SETTINGS = {
+    "site_title": "Student Registration System",
 
-#     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-#     "site_header": "SRS",
+    "site_header": "Administration",
 
-#      # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-#     "site_brand": "SRS"
-# }
+    "site_brand": "Site Administration",
+
+    "site_logo": "images/da.jpg",
+
+    "login_logo": "images/dalogo.jpg",
+
+    "site_logo_classes": "img-circle",
+
+    "copyright": "DAIICT",
+
+    "search_model": ["auth.User", "main.Application"],
+
+    "topmenu_links": [
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+        {"app": "main"},
+
+        {"app": "auth"},
+    ],
+
+    "usermenu_links": [
+        {"model": "auth.user"}
+    ],
+
+    "navigation_expanded": False,
+
+    "hide_models": ["auth.group"],
+
+    "order_with_respect_to": ["auth", "main", "main.application", "main.notification", "main.deadline", "main.question", "main.test"],
+
+    "show_ui_builder": True,
+}
 
 # AWS_ACCESS_KEY_ID = str(os.getenv('AWS_ACCESS_KEY_ID'))
 # AWS_SECRET_ACCESS_KEY = str(os.getenv('AWS_SECRET_ACCESS_KEY'))
@@ -181,19 +231,3 @@ RAZOR_KEY_SECRET = str(os.getenv('RAZOR_KEY_SECRET'))
 # AWS_S3_FILE_OVERWRITE = False
 # AWS_DEFAULT_ACL = None
 # DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-# Use Azure Blob Storage for media files
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-
-# Azure Storage Account Name and Key
-AZURE_ACCOUNT_NAME = str(os.getenv('AZURE_ACCOUNT_NAME'))
-AZURE_ACCOUNT_KEY = str(os.getenv('AZURE_ACCOUNT_KEY'))
-
-# Azure Container name where media files will be stored
-AZURE_CONTAINER = 'srs-it314'
-
-# Optional: Set the base URL for media files
-AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-
-# Optional: Set whether to use secure URLs (HTTPS)
-AZURE_USE_HTTPS = True

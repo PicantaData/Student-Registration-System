@@ -6,6 +6,24 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
+  <style>
+    /* Responsive container for the map */
+    .mapouter {
+      position: relative;
+      text-align: center;
+      height: 250px;
+      width: 100%;
+    }
+
+    /* Responsive iframe inside the container */
+    .gmap_canvas {
+      overflow: hidden;
+      background: none !important;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
+
   <title>Student Registration System</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
@@ -63,7 +81,12 @@
   </header><!-- End Header -->
 
   <!-- ======= Hero Section ======= -->
-  <section id="hero" class="d-flex align-items pb-0">
+
+
+  <!-- <section id="hero" class="d-flex align-items pb-0"> -->
+
+  <section id="hero" class="d-flex align-items pb-5">
+
     <div class="col-lg-12 order-1 order-lg-2 hero-images al ">
       <a class="nav-link scrollto" href="#about"> <img src="{% static 'images/DAIICT_NAAC_Grade_award_2023.png' %}"
           width="100%" height="100%" class="images-fluid" alt=""></a>
@@ -75,18 +98,21 @@
 
  <!-- ======= Testimonials Section ======= -->
  <section id="testimonials" class="testimonials" style="font-size: large;">
-  <div class="container position-relative">
+
+
+
+  <!-- <div class="container position-relative"> -->
+
+    <div class="container position-relative" style="height: 20vh;">
 
     <div class="testimonials-slider swiper" data-aos="fade-up" data-aos-delay="100">
       <div class="swiper-wrapper">
         {% for noti in notifications %}
         <div class="swiper-slide">
           <div class="testimonial-item">
-            <img src="{% static 'images/da.jpg' %}" class="testimonial-img" alt="">
             <p>
-              <i class="bx bxs-quote-alt-left quote-icon-left"></i>
+              <br><br>
                 {{noti.content}} {{noti.time.time|date:'d-m-Y H:i'}}
-              <i class="bx bxs-quote-alt-right quote-icon-right"></i>
             </p>
           </div>
         </div><!-- End testimonial item -->
@@ -214,6 +240,7 @@
               <h4 class="title">B.Tech.(MnC)</h4>
               <p class="description">Mathematics and Computing (MnC) is a fusion of Mathematics and Computer Science
                 that has obtained wide acceptance as a distinct discipline over the past few years.</p>
+                <br><br>
             </div>
           </div>
         </div>
@@ -247,7 +274,7 @@
 
           <div class="col-lg-3 col-md-4">
             <div class="gallery-item">
-              <a href="{% static 'images/gallery/N15jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
+              <a href="{% static 'images/gallery/N15.jpg' %}" class="galleery-lightbox" data-gallery="gallery-item">
                 <img src="{% static 'images/gallery/N15.jpg' %}" alt="" class="images-fluid">
               </a>
             </div>
@@ -309,26 +336,16 @@
         <div>
           <div class="mapouter">
             <div class="gmap_canvas">
-              <iframe width="1000" height="250" id="gmap_canvas"
-                src="https://maps.google.com/maps?q=daiict&t=&z=13&ie=UTF8&iwloc=&output=embed" frameborder="0"
-                scrolling="no" marginheight="0" marginwidth="0"></iframe>
-              <!-- <a href="https://online.stopwatch-timer.net/">timer stopwatch</a><br><a href="https://www.tabclocktab.com/"></a><br> -->
-              <style>
-                .mapouter {
-                  position: relative;
-                  text-align: center;
-                  height: 250px;
-                  width: 100%;
-                }
-              </style><a href="https://www.embedgooglemap.net"></a>
-              <style>
-                .gmap_canvas {
-                  overflow: hidden;
-                  background: none !important;
-                  height: 250px;
-                  width: 100%;
-                }
-              </style>
+              <iframe
+                width="100%"
+                height="100%"
+                id="gmap_canvas"
+                src="https://maps.google.com/maps?q=23.188785279670117,72.62686319760158&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                frameborder="0"
+                scrolling="no"
+                marginheight="0"
+                marginwidth="0"
+              ></iframe>
             </div>
           </div>
         </div>
@@ -395,11 +412,16 @@
     </div>
 
     <div class="container vh-3">
-      <div class="row">
-        <div class="copyright col-lg-5 py-3">
+      <!-- <div class="row"> -->
+        <!-- <div class="copyright col-lg-5 py-3"> -->
+          <div class="copyright col-md-3 col-lg-3 col-sm-3 py-3">
+
+          
           &copy; Copyright <strong><span>DAIICT</span></strong>. All Rights Reserved
         </div>
-        <div class="col-lg-4 col-md-6 right footer-links">
+        <!-- <div class="col-lg-4 col-md-6 right footer-links"> -->
+
+          <div class="col-lg-3 col-md-3 col-sm-2 right footer-links">
           <div class="social-links mt-2 " style="text-align: right; position: absolute; right: 0; font-size: 30px;">
             <a href="https://twitter.com/daiictofficial?lang=en" class="twitter"><i class="bx bxl-twitter"></i></a>
             <a href="https://www.facebook.com/DAIICT/" class="facebook"><i class="bx bxl-facebook"></i></a>
@@ -408,7 +430,7 @@
               class="linkedin"><i class="bx bxl-linkedin"></i></a>
           </div>
         </div>
-      </div>
+      <!-- </div> -->
     </div>
   </footer><!-- End Footer -->
 
