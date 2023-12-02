@@ -62,11 +62,13 @@
             </li>
 
             <!-- Test -->
+            {% if testStarted %}
             <li class="nav-item active">
               <a class="nav-link" href="{% url 'main:StartTest' %}">
                   <span>Test</span>
               </a>
             </li>
+            {% endif %}
             {% if feesPaid %}
             <!-- Feereceipt-->
             <li class="nav-item">

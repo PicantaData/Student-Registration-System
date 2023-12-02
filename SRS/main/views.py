@@ -75,10 +75,13 @@ def Home(request):
 
 
 def Register(request):
-    deadline = Deadline.objects.get(name='app_end')
-    if(timezone.now()>deadline.time):
-        messages.error(request, 'Registration Period is closed!!!')
-        return redirect('main:Login')
+    try:
+        deadline = Deadline.objects.get(name='app_end')
+        if(timezone.now()>deadline.time):
+            messages.error(request, 'Registration Period is closed!!!')
+            return redirect('main:Login')
+    except Deadline.DoesNotExist:
+        pass
 
     if request.method == 'POST':
         if('signup-email' in request.POST):
@@ -325,6 +328,10 @@ def Dashboard(request):
     else:
         messages.info(request,"Please pay test fees to be eligible to give test.")
     
+    testStarted = False
+    if Deadline.objects.filter(name='test_start').exists():
+        testStarted = Deadline.objects.get(name='test_start').time <= timezone.now()
+
     testGiven = Test.objects.filter(app_no=app.id).exists()
 
     notification = Notification.objects.filter(recipient=app) | Notification.objects.filter(filter_flag='Q') | Notification.objects.filter(filter_flag=app.app_status)
@@ -332,7 +339,8 @@ def Dashboard(request):
     context = {'application' : app, 
                'notifications' : notification, 
                'feesPaid' : feesPaid, 
-               'testGiven':testGiven
+               'testGiven':testGiven,
+               'testStarted':testStarted,
                }
     
     return render(request, 'main/dashboard.html', context=context)
