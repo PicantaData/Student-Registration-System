@@ -51,7 +51,7 @@
   <header id="header" class="fixed-top">
     <div class="container d-flex align-items-center justify-content-between">
 
-      <a href="{% url 'main:Home' %}" class="logo"><img src="{% static 'images/dalogo.png' %}" alt=""
+      <a href="{% url 'main:Home' %}" class="logo"><img src="{% static 'images/dalogo.jpg' %}" alt=""
           class="images-fluid"></a>
 
       <nav id="navbar" class="navbar">
@@ -110,8 +110,8 @@
         {% for noti in notifications %}
         <div class="swiper-slide">
           <div class="testimonial-item">
+            <h2><u>Announcements</u></h2><br>
             <p>
-              <br><br>
                 {{noti.content}} {{noti.time.time|date:'d-m-Y H:i'}}
             </p>
           </div>
@@ -378,7 +378,7 @@
           </div>
           <div class="col-lg-8 mt-5 mt-lg-0">
 
-            <form class="php-email-form" action="{% url 'main:Home' %}" method="post">
+            <form class="php-email-form" action="{% url 'main:Home' %}" method="post" onsubmit="MsgFunc()">
               {% csrf_token %}
               <div class="row">
                 <div class="col-md-6 form-group">
@@ -394,7 +394,7 @@
               <div class="form-group mt-3">
                 <textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea>
               </div>
-              <div class="text-center"><button type='submit' onclick="MsgFunc()">Send Mail</button></div>
+              <div class="text-center"><button type='submit'>Send Mail</button></div>
             </form>
           </div>
         </div>

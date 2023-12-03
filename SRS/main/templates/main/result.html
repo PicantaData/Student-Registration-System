@@ -196,10 +196,10 @@
       <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
       <div class="logo_image_daiict" style="margin-bottom: 5%;display: flex;justify-content: center;align-items: center;flex-direction: column;" href="index.html">
         <div class="daiictimg">
-          <img class="daiict" target="_blank" src="{% static 'images/dalogo.png' %}">
+          <img class="daiict" target="_blank" src="{% static 'images/dalogo.jpg' %}">
         </div>
         <div>
-          <a style="color:white;text-decoration: none;font-size: 14px;font-weight: 500;" href="https://www.daiict.ac.in/" target="_blank" class="sidebar-brand-text">DA-IICT </a>
+          <p style="color:white;text-decoration: none;font-size: 14px;font-weight: 500;" target="_blank" class="sidebar-brand-text">DA-IICT </p>
         </div>
       </div>
       <a href="{% url 'main:Home' %}">Home</a>
@@ -218,7 +218,7 @@
             <div id="progress-bar" style="width: 50%; height: auto;"></div>
             <div id="result-card-score-text" style="width: 50%;height: auto;">
               <h1 style="font-weight: 100;margin: 0px;font-size: 2vw;">Your Score:</h1>
-              <p style="font-weight: 500; font-size: 2.4vw;color: #228b22;">{{score}} Out of {{total}}</p>
+              <p style="font-weight: 500; font-size: 2.4vw;color: #228b22;">{{score}}/{{total}}</p>
             </div>
             <div id="result-answers">
               <div class="answers">Correct Answers: <span>{{correct}}</span></div>

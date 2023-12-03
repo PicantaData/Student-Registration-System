@@ -8,6 +8,8 @@ class ApplicationAdmin(admin.ModelAdmin):
     ordering = ['name', 'app_status']
 
 class NotificationAdmin(admin.ModelAdmin):
+    list_filter = ['filter_flag']
+    list_display = ['filter_flag', 'content']
     def save_model(self, request, obj, form, change):
         if obj.filter_flag == 'S' and obj.recipient is None:
         # Example of raising an error message
@@ -19,9 +21,17 @@ class NotificationAdmin(admin.ModelAdmin):
 class DeadlineAdmin(admin.ModelAdmin):
     list_display = ('name', 'time')  
 
+class QuestionAdmin(admin.ModelAdmin):
+    search_fields = ['ques', 'qid']
+    list_display = ['qid', 'ques', 'ans']
+
+class TestAdmin(admin.ModelAdmin):
+    search_fields = ['app_no', 'score']
+    ordering = ['score']
+
 admin.site.register(Application, ApplicationAdmin)
 admin.site.register(Notification, NotificationAdmin)
 admin.site.register(ApplicantResponse)
-admin.site.register(Question)
-admin.site.register(Test)
+admin.site.register(Question, QuestionAdmin)
+admin.site.register(Test, TestAdmin)
 admin.site.register(Deadline, DeadlineAdmin)

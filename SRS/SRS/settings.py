@@ -153,14 +153,8 @@ LOGIN_URL = 'main:Login'
 # Azure Storage Account Name and Key
 AZURE_ACCOUNT_NAME = str(os.getenv('AZURE_ACCOUNT_NAME'))
 AZURE_ACCOUNT_KEY = str(os.getenv('AZURE_ACCOUNT_KEY'))
-
-# Azure Container name where media files will be stored
 AZURE_CONTAINER = 'srs-it314'
-
-# Optional: Set the base URL for media files
 AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-
-# Optional: Set whether to use secure URLs (HTTPS)
 AZURE_USE_HTTPS = True
 
 STATIC_URL = '/static/'
@@ -223,11 +217,3 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": True,
 }
 
-# AWS_ACCESS_KEY_ID = str(os.getenv('AWS_ACCESS_KEY_ID'))
-# AWS_SECRET_ACCESS_KEY = str(os.getenv('AWS_SECRET_ACCESS_KEY'))
-# AWS_STORAGE_BUCKET_NAME = str(os.getenv('AWS_STORAGE_BUCKET_NAME'))
-# # STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
-# AWS_S3_FILE_OVERWRITE = False
-# AWS_DEFAULT_ACL = None
-# DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"

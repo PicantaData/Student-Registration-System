@@ -41,7 +41,6 @@ def Home(request):
         from_email = request.POST['email']
         to_list = [EMAIL_HOST_USER]
         send_mail(subject, message, from_email, to_list)
-        return render(request, 'main/home.html')
     
     flag = False
     notifications = Notification.objects.filter(filter_flag='E')
@@ -317,9 +316,10 @@ def Dashboard(request):
     else:
         messages.info(request,"Please pay test fees to be eligible to give test.")
     
+    #Current time is within the given timeframe
     testStarted = False
-    if Deadline.objects.filter(name='test_start').exists():
-        testStarted = Deadline.objects.get(name='test_start').time <= timezone.now()
+    if Deadline.objects.filter(name='test_start').exists() and Deadline.objects.filter(name='test_end').exists():
+        testStarted = Deadline.objects.get(name='test_start').time <= timezone.now() and Deadline.objects.get(name='test_end').time > timezone.now()
 
     testGiven = Test.objects.filter(app_no=app.id).exists()
 

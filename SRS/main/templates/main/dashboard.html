@@ -47,9 +47,9 @@
             <!-- Sidebar - Brand -->
             <div class="logo_image_daiict" style="padding:10%;"href="index.html">
                 <div class=daiictimg>
-                    <img class="daiict" style="height: auto; width: 100%;" target="_blank" src="{% static 'images/dalogo.png' %}" />
+                    <img class="daiict" style="height: auto; width: 100%;" target="_blank" src="{% static 'images/dalogo.jpg' %}" />
                 </div>
-                <div style="text-align: center;"><a style="color:white;text-decoration: none;font-size: 12px;font-weight: 500;" href="https://www.daiict.ac.in/" target="_blank" class="sidebar-brand-text">DA-IICT </a></div>
+                <div style="text-align: center;"><p style="color:white;text-decoration: none;font-size: 12px;font-weight: 500;" class="sidebar-brand-text">DA-IICT</p></div>
             </div>
 
             <!-- Divider -->
@@ -125,14 +125,16 @@
                         {% for noti in notifications %}
                         <div class="swiper-slide">
                           <div class="testimonial-item">
-                            <p class="text-center" style="font-size: 1vw;color: #e2062c;font-weight: 400;">
-                                {{noti.content}}
+                            <p class="text-center">
+                              <br><br>
+                                {{noti.content}} {{noti.time.time|date:'d-m-Y H:i'}}
                             </p>
                           </div>
                         </div><!-- End testimonial item -->
                         {% endfor %}
                       </div>
-                      <div class="swiper-pagination"></div>
+                      <br>
+                      <div class="swiper-pagination"></div>  
                     </div>
 
                   </div>
@@ -170,7 +172,24 @@
                           <div class="col-sm-3">
                             <h6 class="mb-0">Full Name</h6>
                           </div>
-                          <div class="col-sm-9 text-secondary">{{application.name}} </div>
+                          <div class="col-sm-3 text-secondary">{{application.name}}</div>
+                          <br><br>
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">Application No.</h6>
+                          </div>
+                          <div class="col-sm-2 text-secondary">{{application.app_no}}</div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">Date of Birth</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.dob}}</div>
+                          <br><br>
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">Gender</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.gender}}</div>
                         </div>
                         <hr>
                         <div class="row">
@@ -184,7 +203,12 @@
                           <div class="col-sm-3">
                             <h6 class="mb-0">Phone</h6>
                           </div>
-                          <div class="col-sm-9 text-secondary">{{application.phone}}</div>
+                          <div class="col-sm-3 text-secondary">{{application.phone}}</div>
+                          <br><br>
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">Alternate Phone</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.alt_phone}}</div>
                         </div>
                         <hr>
                         <div class="row">
@@ -192,6 +216,73 @@
                             <h6 class="mb-0">Address</h6>
                           </div>
                           <div class="col-sm-9 text-secondary">{{application.address}}</div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">City</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.city}}</div>
+                          <br><br>
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">Postal Code</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.postal_code}}</div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">State</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.state}}</div>
+                          <br><br>
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">Country</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.country}}</div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">SSC School</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.ssc}}</div>
+                          <br><br>
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">SSC Percentage</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.ssc_per}}</div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">HSC</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.hsc}}</div>
+                          <br><br>
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">HSC Percentage</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.hsc_per}}</div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">GUJCET Rank</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.gujcet}}</div>
+                          <br><br>
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">JEE Rank</h6>
+                          </div>
+                          <div class="col-sm-3 text-secondary">{{application.jee}}</div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                          <div class="col-sm-3">
+                            <h6 class="mb-0">ID Proof</h6>
+                          </div>
+                          <div class="col-sm-9 text-secondary"><a href="{{application.id_proof.url}}" target="_blank">View ID Proof</a></div>
                         </div>
                         <hr>
                         <div class="row">
@@ -213,6 +304,7 @@
                             <h6 class="mb-0">Verification Status</h6>
                           </div>
                           <div class="col-sm-3 text-secondary">{{application.get_app_status_display}}</div>
+                          <br><br>
                           <div class="col-sm-3">
                             <h6 class="mb-0">Fee Payment Status</h6>
                           </div>
